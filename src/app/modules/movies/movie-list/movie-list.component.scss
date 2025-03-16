@@ -1,0 +1,84 @@
+.movies-section {
+  padding: 20px;
+  background-color: #141414;
+  overflow: hidden;
+}
+
+.section-title {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.movies-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+
+  /* Habilitar la barra de desplazamiento */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+  }
+}
+
+.movies-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.movie-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: 200px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.3);
+  }
+}
+
+.poster-img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.movie-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  color: white;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+
+  .movie-title {
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+  }
+}
+
+.movie-card:hover .movie-overlay {
+  opacity: 1;
+}

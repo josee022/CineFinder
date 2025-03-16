@@ -1,0 +1,15 @@
+<div class="movies-section">
+  <h2 class="section-title">Trending Movies</h2>
+
+  <!-- Contenedor de películas con scroll habilitado -->
+  <div #movieContainer class="movies-container">
+    <div class="movies-wrapper">
+      <div *ngFor="let movie of movies" class="movie-card">
+        <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" class="poster-img">
+        <div class="movie-overlay">
+          <p class="movie-title">{{ movie.title }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
