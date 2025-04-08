@@ -1,0 +1,57 @@
+<div class="recommendations-container">
+  <h2 class="section-title">Películas Recomendadas</h2>
+  
+  <!-- Loading indicator -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando recomendaciones...</p>
+    </div>
+  }
+  
+  <!-- Error message -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadRecommendations()">
+        Intentar de nuevo
+      </button>
+    </div>
+  }
+  
+  <!-- Recommendations list -->
+  @if (!isLoading && !errorMessage && recommendations.length > 0) {
+    <div class="recommendations-scroll">
+      <div class="recommendations-list">
+        @for (movie of recommendations; track movie.id) {
+          <div class="movie-card" (click)="navigateToMovie(movie.id)">
+            <div class="movie-poster">
+              @if (movie.poster_path) {
+                <img [src]="'https://image.tmdb.org/t/p/w200' + movie.poster_path" [alt]="movie.title">
+              } @else {
+                <div class="no-poster">
+                  <mat-icon>movie</mat-icon>
+                  <span>Sin póster</span>
+                </div>
+              }
+              <div class="movie-rating">
+                <span>{{ movie.vote_average | number:'1.1-1' }}</span>
+              </div>
+            </div>
+            <div class="movie-info">
+              <h3 class="movie-title">{{ movie.title }}</h3>
+              <p class="movie-year" *ngIf="movie.release_date">{{ movie.release_date | slice:0:4 }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (!isLoading && !errorMessage) {
+    <div class="no-results">
+      <mat-icon>movie_off</mat-icon>
+      <h3>No hay recomendaciones</h3>
+      <p>No se encontraron recomendaciones para esta película</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,73 @@
+<div class="search-container">
+  <div class="search-form">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input 
+        type="text" 
+        matInput 
+        placeholder="Buscar películas..." 
+        [(ngModel)]="searchQuery"
+        (input)="onSearchInput()"
+        (keyup.enter)="onSearchSubmit()"
+        (blur)="hideResults()"
+        autocomplete="off">
+      <button 
+        *ngIf="searchQuery" 
+        matSuffix 
+        mat-icon-button 
+        aria-label="Limpiar" 
+        (click)="searchQuery = ''; searchResults = []; showResults = false">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    
+    <button 
+      mat-raised-button 
+      color="accent" 
+      class="search-button"
+      [disabled]="!searchQuery.trim()"
+      (click)="onSearchSubmit()">
+      Buscar
+    </button>
+  </div>
+
+  @if (showResults && (searchResults.length > 0 || isLoading)) {
+    <div class="search-results-dropdown">
+      @if (isLoading) {
+        <div class="loading-results">
+          <div class="spinner"></div>
+          <span>Buscando...</span>
+        </div>
+      }
+
+      @if (searchResults.length > 0) {
+        <div class="search-results-list">
+          @for (movie of searchResults; track movie.id) {
+            <div class="search-result-item" (click)="navigateToMovie(movie.id)">
+              <div class="search-result-poster">
+                <img 
+                  [src]="movie.poster_path ? 'https://image.tmdb.org/t/p/w92' + movie.poster_path : 'assets/placeholder.jpg'" 
+                  [alt]="movie.title">
+              </div>
+              <div class="search-result-info">
+                <h4>{{ movie.title }}</h4>
+                <div class="search-result-meta">
+                  <span class="year">{{ movie.release_date | slice:0:4 }}</span>
+                  <span class="rating">
+                    <mat-icon class="star-icon">star</mat-icon>
+                    {{ movie.vote_average | number:'1.1-1' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          }
+          <div class="view-all-results">
+            <button mat-button color="primary" (click)="onSearchSubmit()">
+              Ver todos los resultados
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

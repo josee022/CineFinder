@@ -1,1 +1,139 @@
-<p>movie-detail works!</p>
+<div class="movie-detail-container">
+  <!-- Loading indicator -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando detalles de la película...</p>
+    </div>
+  }
+
+  <!-- Error message -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadMovieDetails(movie?.id || 0)">
+        Intentar de nuevo
+      </button>
+    </div>
+  }
+
+  <!-- Movie details -->
+  @if (movie && !isLoading && !errorMessage) {
+    <div class="movie-backdrop" [style.background-image]="'url(' + getBackdropUrl() + ')'">
+      <div class="backdrop-overlay">
+        <div class="container movie-header">
+          <div class="poster-container">
+            <img [src]="getPosterUrl()" alt="{{ movie.title }} póster" class="movie-poster">
+          </div>
+          <div class="movie-info">
+            <h1 class="movie-title">{{ movie.title }} <span class="year">({{ movie.release_date | slice:0:4 }})</span></h1>
+            
+            <div class="movie-meta">
+              <span class="rating">
+                <mat-icon>star</mat-icon>
+                {{ movie.vote_average | number:'1.1-1' }}
+              </span>
+              <span class="runtime">{{ movie.runtime }} min</span>
+            </div>
+            
+            <div class="genres">
+              @for (genre of movie.genres; track genre.id) {
+                <span class="genre-chip">{{ genre.name }}</span>
+              }
+            </div>
+            
+            <p class="tagline">{{ movie.tagline }}</p>
+            
+            <div class="actions">
+              <button mat-raised-button color="primary">
+                <mat-icon>play_arrow</mat-icon> Ver Tráiler
+              </button>
+              <button mat-raised-button color="accent">
+                <mat-icon>bookmark</mat-icon> Añadir a Favoritos
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container content-section">
+      <mat-tab-group>
+        <mat-tab label="Resumen">
+          <div class="tab-content">
+            <h2>Resumen</h2>
+            <p class="overview">{{ movie.overview }}</p>
+            
+            <div class="details-grid">
+              <div class="detail-item">
+                <h3>Estado</h3>
+                <p>{{ movie.status }}</p>
+              </div>
+              <div class="detail-item">
+                <h3>Presupuesto</h3>
+                <p>{{ movie.budget | currency }}</p>
+              </div>
+              <div class="detail-item">
+                <h3>Ingresos</h3>
+                <p>{{ movie.revenue | currency }}</p>
+              </div>
+              <div class="detail-item">
+                <h3>Idioma Original</h3>
+                <p>{{ movie.original_language | uppercase }}</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+        
+        <mat-tab label="Reparto">
+          <div class="tab-content">
+            <h2>Reparto</h2>
+            <div class="cast-grid">
+              @if (movie.credits && movie.credits.cast && movie.credits.cast.length > 0) {
+                @for (actor of movie.credits.cast.slice(0, 10); track actor.id) {
+                  <div class="cast-card">
+                    <img [src]="actor.profile_path ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path : 'assets/placeholder.jpg'" 
+                         alt="{{ actor.name }}" class="cast-image">
+                    <div class="cast-info">
+                      <h3>{{ actor.name }}</h3>
+                      <p>{{ actor.character }}</p>
+                    </div>
+                  </div>
+                }
+              } @else {
+                <p>No hay información del reparto disponible</p>
+              }
+            </div>
+          </div>
+        </mat-tab>
+        
+        <mat-tab label="Vídeos">
+          <div class="tab-content">
+            <h2>Vídeos</h2>
+            <div class="videos-grid">
+              @if (movie.videos && movie.videos.results && movie.videos.results.length > 0) {
+                @for (video of movie.videos.results.slice(0, 4); track video.id) {
+                  <div class="video-card">
+                    <h3>{{ video.name }}</h3>
+                    <p>{{ video.type }}</p>
+                    <button mat-button color="primary">
+                      <mat-icon>play_circle</mat-icon> Ver
+                    </button>
+                  </div>
+                }
+              } @else {
+                <p>No hay vídeos disponibles</p>
+              }
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+      
+      <!-- Recomendaciones de películas -->
+      <div class="recommendations-section">
+        <app-movie-recommendations [movieId]="movieId"></app-movie-recommendations>
+      </div>
+    </div>
+  }
+</div>

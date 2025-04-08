@@ -1,15 +1,59 @@
 <div class="movies-section">
   <h2 class="section-title">Trending Movies</h2>
 
-  <!-- Contenedor de películas con scroll habilitado -->
-  <div #movieContainer class="movies-container">
-    <div class="movies-wrapper">
-      <div *ngFor="let movie of movies" class="movie-card">
-        <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" class="poster-img">
-        <div class="movie-overlay">
-          <p class="movie-title">{{ movie.title }}</p>
-        </div>
+  <!-- Loading indicator -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Loading movies...</p>
+    </div>
+  }
+
+  <!-- Error message -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadTrendingMovies()">
+        Try Again
+      </button>
+    </div>
+  }
+
+  <!-- Movies grid -->
+  @if (!isLoading && !errorMessage) {
+    <div class="movies-container" #movieContainer>
+      <div class="movies-wrapper">
+        @for (movie of movies; track movie.id) {
+          <mat-card class="movie-card" (click)="navigateToMovieDetail(movie.id)">
+            <img mat-card-image [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="{{ movie.title }}" class="poster-img">
+            <mat-card-content>
+              <h3 class="movie-title">{{ movie.title }}</h3>
+              <div class="movie-info">
+                <span class="rating">
+                  <mat-icon>star</mat-icon>
+                  {{ movie.vote_average | number:'1.1-1' }}
+                </span>
+                <span class="year">{{ movie.release_date | slice:0:4 }}</span>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button color="primary" (click)="navigateToMovieDetail(movie.id); $event.stopPropagation()">
+                <mat-icon>info</mat-icon> Details
+              </button>
+              <button mat-button color="accent" (click)="$event.stopPropagation()">
+                <mat-icon>bookmark</mat-icon> Save
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+        @empty {
+          <div class="no-movies">
+            <mat-icon>movie_off</mat-icon>
+            <p>No movies found</p>
+          </div>
+        }
       </div>
     </div>
-  </div>
+  }
 </div>

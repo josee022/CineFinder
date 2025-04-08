@@ -1,0 +1,93 @@
+<div class="search-results-container">
+  <div class="container">
+    <div class="search-header">
+      <h1 class="search-title">Resultados de búsqueda: "{{ searchQuery }}"</h1>
+      <p class="results-count" *ngIf="!isLoading && !errorMessage && totalResults > 0">
+        Mostrando {{ (currentPage - 1) * pageSize + 1 }}-{{ (currentPage - 1) * pageSize + searchResults.length }} de {{ totalResults }} resultados
+      </p>
+    </div>
+
+    <!-- Loading indicator -->
+    @if (isLoading) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando resultados...</p>
+      </div>
+    }
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <div class="error-container">
+        <mat-icon>error</mat-icon>
+        <p>{{ errorMessage }}</p>
+        <button mat-raised-button color="primary" (click)="searchMovies()">
+          Intentar de nuevo
+        </button>
+      </div>
+    }
+
+    <!-- No results message -->
+    @if (!isLoading && !errorMessage && searchResults.length === 0) {
+      <div class="no-results-container">
+        <mat-icon>search_off</mat-icon>
+        <h2>No se encontraron resultados para "{{ searchQuery }}"</h2>
+        <p>Intenta con otros términos de búsqueda</p>
+        <button mat-raised-button color="primary" routerLink="/home">
+          Volver al inicio
+        </button>
+      </div>
+    }
+
+    <!-- Search results -->
+    @if (!isLoading && !errorMessage && searchResults.length > 0) {
+      <div class="movies-grid">
+        @for (movie of searchResults; track movie.id) {
+          <mat-card class="movie-card" (click)="navigateToMovieDetail(movie.id)">
+            <div class="movie-poster-container">
+              @if (movie.poster_path) {
+                <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title" class="movie-poster">
+              } @else {
+                <div class="no-poster">
+                  <mat-icon>movie</mat-icon>
+                  <span>Sin póster</span>
+                </div>
+              }
+              <div class="movie-rating">
+                <span>{{ movie.vote_average | number:'1.1-1' }}</span>
+              </div>
+            </div>
+            <div class="movie-info">
+              <h3 class="movie-title">{{ movie.title }}</h3>
+              <p class="movie-year" *ngIf="movie.release_date">{{ movie.release_date | slice:0:4 }}</p>
+              <p class="movie-overview">{{ (movie.overview.length > 100) ? (movie.overview | slice:0:100) + '...' : movie.overview }}</p>
+              <button mat-button color="primary" (click)="navigateToMovieDetail(movie.id); $event.stopPropagation()">
+                <mat-icon>info</mat-icon> Ver detalles
+              </button>
+            </div>
+          </mat-card>
+        }
+      </div>
+
+      <!-- Paginación simplificada -->
+      @if (totalPages > 1) {
+        <div class="custom-pagination">
+          <button 
+            mat-raised-button 
+            [disabled]="currentPage === 1"
+            (click)="onPageChange(currentPage - 1)"
+            class="pagination-button">
+            <mat-icon>chevron_left</mat-icon> Anterior
+          </button>
+          <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
+          <button 
+            mat-raised-button 
+            [disabled]="currentPage === totalPages"
+            (click)="onPageChange(currentPage + 1)"
+            class="pagination-button">
+            Siguiente <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      }
+    }
+  </div>
+</div>
