@@ -1,35 +1,64 @@
-<mat-toolbar color="primary" class="navbar">
-  <div class="container">
-    <a class="logo" routerLink="/">
-      <mat-icon>movie</mat-icon>
-      <span>CineFinder</span>
-    </a>
+<div class="navbar-wrapper">
+  <!-- Navbar para pantallas grandes -->
+  <mat-toolbar color="primary" class="navbar desktop-navbar">
+    <div class="container">
+      <a class="logo" routerLink="/">
+        <mat-icon>movie</mat-icon>
+        <span>CineFinder</span>
+      </a>
+      
+      <div class="nav-links">
+        @for (item of navItems; track item.path) {
+          <a mat-button 
+             [routerLink]="item.path" 
+             routerLinkActive="active-link">
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </div>
+      
+      <div class="search-container">
+        <app-search></app-search>
+      </div>
+      
+      <button mat-icon-button class="mobile-menu-button" (click)="toggleMobileMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <!-- Menú móvil -->
+  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+    <div class="mobile-menu-header">
+      <a class="logo" routerLink="/">
+        <mat-icon>movie</mat-icon>
+        <span>CineFinder</span>
+      </a>
+      <button mat-icon-button (click)="toggleMobileMenu()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
     
-    <div class="nav-links">
+    <div class="mobile-search">
+      <app-search></app-search>
+    </div>
+    
+    <div class="mobile-nav-links">
       @for (item of navItems; track item.path) {
         <a mat-button 
            [routerLink]="item.path" 
-           routerLinkActive="active-link">
+           routerLinkActive="active-link"
+           (click)="toggleMobileMenu()">
           <mat-icon>{{ item.icon }}</mat-icon>
           <span>{{ item.label }}</span>
         </a>
       }
     </div>
-    
-    <div class="nav-actions">
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu">
-        <mat-icon>search</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item>
-          <mat-icon>search</mat-icon>
-          <span>Search Movies</span>
-        </button>
-        <button mat-menu-item>
-          <mat-icon>person</mat-icon>
-          <span>Search Actors</span>
-        </button>
-      </mat-menu>
-    </div>
   </div>
-</mat-toolbar>
+  
+  <!-- Overlay para cerrar el menú móvil -->
+  <div class="mobile-menu-overlay" 
+       [class.visible]="isMobileMenuOpen" 
+       (click)="toggleMobileMenu()"></div>
+</div>
