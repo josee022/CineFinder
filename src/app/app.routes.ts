@@ -40,19 +40,24 @@ export const routes: Routes = [
     title: 'CineFinder - Resultados de Búsqueda'
   },
   {
-    path: 'movies/filters',
-    loadComponent: () => import('./modules/movies/advanced-filters/advanced-filters.component').then(m => m.AdvancedFiltersComponent),
-    title: 'CineFinder - Filtros Avanzados'
-  },
-  {
-    path: 'movies/discover',
-    loadComponent: () => import('./modules/movies/discover-results/discover-results.component').then(m => m.DiscoverResultsComponent),
-    title: 'CineFinder - Descubrir Películas'
-  },
-  {
-    path: 'movies/calendar',
-    loadComponent: () => import('./modules/movies/release-calendar/release-calendar.component').then(m => m.ReleaseCalendarComponent),
-    title: 'CineFinder - Calendario de Estrenos'
+    path: 'explore',
+    children: [
+      {
+        path: 'filters',
+        loadComponent: () => import('./modules/movies/advanced-filters/advanced-filters.component').then(m => m.AdvancedFiltersComponent),
+        title: 'CineFinder - Filtros Avanzados'
+      },
+      {
+        path: 'discover',
+        loadComponent: () => import('./modules/movies/discover-results/discover-results.component').then(m => m.DiscoverResultsComponent),
+        title: 'CineFinder - Descubrir Películas'
+      },
+      {
+        path: 'calendar',
+        loadComponent: () => import('./modules/movies/release-calendar/release-calendar.component').then(m => m.ReleaseCalendarComponent),
+        title: 'CineFinder - Calendario de Estrenos'
+      }
+    ]
   },
   {
     path: '**',
