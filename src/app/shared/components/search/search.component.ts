@@ -89,7 +89,7 @@ export class SearchComponent implements OnInit {
   }
 
   navigateToMovie(id: number): void {
-    this.router.navigate(['/movie', id]);
+    this.router.navigate(['/movies', id]);
     this.hideResults();
     this.searchQuery = '';
   }

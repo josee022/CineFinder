@@ -47,7 +47,7 @@ export class NavbarComponent implements OnInit {
   exploreCategories = [
     { label: 'common.advancedSearch', path: '/movies/filters', icon: 'filter_list' },
     { label: 'common.discover', path: '/movies/discover', icon: 'explore' },
-    { label: 'common.releaseCalendar', path: '/movies/calendar', icon: 'calendar_today' }
+    { label: 'common.releaseCalendar', path: '/movies/release-calendar', icon: 'calendar_today' }
   ];
   
   isMobileMenuOpen = false;
