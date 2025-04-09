@@ -49,6 +49,13 @@ export class MovieCategoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Obtener el tipo de categoría de los datos de la ruta
+    this.route.data.subscribe(data => {
+      if (data['categoryType']) {
+        this.categoryType = data['categoryType'];
+      }
+    });
+    
     this.route.queryParamMap.subscribe(params => {
       this.currentPage = Number(params.get('page')) || 1;
       this.loadMovies();

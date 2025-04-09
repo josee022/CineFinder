@@ -1,0 +1,184 @@
+<div class="filters-container">
+  <div class="filters-header">
+    <h1 class="section-title">Búsqueda Avanzada</h1>
+    <p class="section-description">Encuentra películas utilizando filtros específicos</p>
+  </div>
+
+  <form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="filters-form">
+    <!-- Búsqueda por texto -->
+    <div class="filter-section">
+      <h2 class="filter-title">Búsqueda por texto</h2>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Título de película</mat-label>
+        <input matInput formControlName="query" placeholder="Ej. Matrix, Star Wars...">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Filtros básicos -->
+    <div class="filter-section">
+      <h2 class="filter-title">Filtros básicos</h2>
+      <div class="filter-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Año de estreno</mat-label>
+          <mat-select formControlName="year">
+            <mat-option [value]="null">Todos los años</mat-option>
+            <mat-option *ngFor="let year of years" [value]="year">{{ year }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ordenar por</mat-label>
+          <mat-select formControlName="sortBy">
+            <mat-option *ngFor="let option of sortOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Puntuación mínima</mat-label>
+          <input matInput type="number" min="0" max="10" step="0.5" formControlName="voteAverageGte">
+          <span matSuffix>/ 10</span>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-row">
+        <mat-checkbox formControlName="includeAdult" color="primary">
+          Incluir contenido para adultos
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <!-- Géneros -->
+    <div class="filter-section">
+      <h2 class="filter-title">Géneros</h2>
+      <div class="loading-indicator" *ngIf="isLoadingGenres">
+        <mat-spinner diameter="30"></mat-spinner>
+        <span>Cargando géneros...</span>
+      </div>
+      <mat-form-field appearance="outline" class="full-width" *ngIf="!isLoadingGenres">
+        <mat-label>Seleccionar géneros</mat-label>
+        <mat-select formControlName="genres" multiple>
+          <mat-option *ngFor="let genre of genres" [value]="genre.id">
+            {{ genre.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Actores -->
+    <div class="filter-section">
+      <h2 class="filter-title">Actores</h2>
+      <div class="search-people-container">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Buscar actor</mat-label>
+          <input matInput formControlName="withCast" (input)="searchActors($any($event.target).value)" placeholder="Ej. Tom Hanks, Scarlett Johansson...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="search-results" *ngIf="actorSearchResults.length > 0">
+          <div class="search-result-item" *ngFor="let actor of actorSearchResults" (click)="addActor(actor)">
+            <img [src]="getProfileImageUrl(actor.profile_path)" alt="{{ actor.name }}" class="person-image">
+            <span class="person-name">{{ actor.name }}</span>
+          </div>
+        </div>
+
+        <div class="loading-indicator small" *ngIf="isLoadingActors">
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>Buscando...</span>
+        </div>
+      </div>
+
+      <div class="selected-people" *ngIf="filterForm.get('selectedActors')?.value?.length > 0">
+        <h3>Actores seleccionados:</h3>
+        <div class="person-chips">
+          <mat-chip-set>
+            <mat-chip *ngFor="let actor of filterForm.get('selectedActors')?.value" (removed)="removeActor(actor)">
+              {{ actor.name }}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </div>
+    </div>
+
+    <!-- Directores -->
+    <div class="filter-section">
+      <h2 class="filter-title">Directores</h2>
+      <div class="search-people-container">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Buscar director</mat-label>
+          <input matInput formControlName="withCrew" (input)="searchDirectors($any($event.target).value)" placeholder="Ej. Christopher Nolan, Greta Gerwig...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="search-results" *ngIf="directorSearchResults.length > 0">
+          <div class="search-result-item" *ngFor="let director of directorSearchResults" (click)="addDirector(director)">
+            <img [src]="getProfileImageUrl(director.profile_path)" alt="{{ director.name }}" class="person-image">
+            <span class="person-name">{{ director.name }}</span>
+          </div>
+        </div>
+
+        <div class="loading-indicator small" *ngIf="isLoadingDirectors">
+          <mat-spinner diameter="20"></mat-spinner>
+          <span>Buscando...</span>
+        </div>
+      </div>
+
+      <div class="selected-people" *ngIf="filterForm.get('selectedDirectors')?.value?.length > 0">
+        <h3>Directores seleccionados:</h3>
+        <div class="person-chips">
+          <mat-chip-set>
+            <mat-chip *ngFor="let director of filterForm.get('selectedDirectors')?.value" (removed)="removeDirector(director)">
+              {{ director.name }}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </div>
+    </div>
+
+    <!-- Servicios de streaming -->
+    <div class="filter-section">
+      <h2 class="filter-title">Servicios de streaming</h2>
+      <div class="loading-indicator" *ngIf="isLoadingProviders">
+        <mat-spinner diameter="30"></mat-spinner>
+        <span>Cargando servicios...</span>
+      </div>
+      
+      <div class="streaming-providers" *ngIf="!isLoadingProviders">
+        <p class="filter-description">Selecciona los servicios de streaming donde quieres ver las películas:</p>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Servicios de streaming</mat-label>
+          <mat-select formControlName="withWatchProviders" multiple>
+            <mat-option *ngFor="let provider of watchProviders" [value]="provider.provider_id">
+              <div class="provider-option">
+                <img [src]="getProviderLogoUrl(provider.logo_path)" alt="{{ provider.provider_name }}" class="provider-logo">
+                <span>{{ provider.provider_name }}</span>
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="filter-actions">
+      <button type="button" mat-stroked-button color="warn" (click)="resetFilters()">
+        <mat-icon>refresh</mat-icon>
+        Restablecer filtros
+      </button>
+      <button type="submit" mat-raised-button color="primary">
+        <mat-icon>filter_list</mat-icon>
+        Aplicar filtros
+      </button>
+    </div>
+  </form>
+</div>

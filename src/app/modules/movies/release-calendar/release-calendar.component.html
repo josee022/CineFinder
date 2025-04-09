@@ -1,0 +1,86 @@
+<div class="calendar-container">
+  <div class="calendar-header">
+    <h1 class="section-title">Calendario de Estrenos</h1>
+    <p class="section-description">Descubre las próximas películas que llegarán a los cines</p>
+  </div>
+
+  <!-- Indicador de carga -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Cargando calendario de estrenos...</p>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div class="error-container" *ngIf="!isLoading && errorMessage">
+    <mat-icon>error_outline</mat-icon>
+    <h3>¡Ups! Algo salió mal</h3>
+    <p>{{ errorMessage }}</p>
+    <button mat-raised-button color="primary" (click)="loadCalendarData()">
+      <mat-icon>refresh</mat-icon>
+      Intentar de nuevo
+    </button>
+  </div>
+
+  <!-- Calendario -->
+  <div class="calendar-content" *ngIf="!isLoading && !errorMessage">
+    <!-- Controles de navegación -->
+    <div class="calendar-navigation">
+      <button mat-icon-button color="primary" (click)="previousMonth()" matTooltip="Mes anterior">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <h2 class="current-month">{{ monthName }}</h2>
+      <button mat-icon-button color="primary" (click)="nextMonth()" matTooltip="Mes siguiente">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <button mat-button color="accent" (click)="goToCurrentMonth()" matTooltip="Ir al mes actual">
+        <mat-icon>today</mat-icon> Hoy
+      </button>
+    </div>
+    
+    <!-- Calendario del mes -->
+    <div class="calendar-grid">
+      <!-- Días de la semana -->
+      <div class="weekdays">
+        <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
+      </div>
+      
+      <!-- Semanas -->
+      <div class="calendar-weeks">
+        <div class="calendar-week" *ngFor="let week of calendarWeeks">
+          <div class="day-cell" *ngFor="let day of week" 
+               [class.today]="day.isToday"
+               [class.past]="day.isPast"
+               [class.other-month]="!day.isCurrentMonth"
+               [class.has-movies]="hasMovies(day)">
+            
+            <div class="day-header">
+              <span class="day-number">{{ day.date.getDate() }}</span>
+            </div>
+            
+            <div class="day-content" *ngIf="hasMovies(day)">
+              <div class="movie-count" *ngIf="getMovieCount(day) > 3">
+                +{{ getMovieCount(day) }} estrenos
+              </div>
+              
+              <div class="day-movies">
+                <div class="movie-item" *ngFor="let movie of day.movies.slice(0, 3)" 
+                     [routerLink]="['/movies', movie.id]">
+                  <div class="movie-poster">
+                    <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title" loading="lazy">
+                  </div>
+                  <div class="movie-info">
+                    <h4 class="movie-title" [matTooltip]="movie.title">{{ movie.title }}</h4>
+                    <div class="movie-rating" *ngIf="movie.vote_average > 0">
+                      <mat-icon>star</mat-icon>
+                      <span>{{ movie.vote_average.toFixed(1) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

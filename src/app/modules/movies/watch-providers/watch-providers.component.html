@@ -1,0 +1,115 @@
+<div class="watch-providers-container">
+  <!-- Indicador de carga -->
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Cargando proveedores de streaming...</p>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div class="error-container" *ngIf="!isLoading && errorMessage">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ errorMessage }}</p>
+    <button mat-button color="primary" (click)="loadWatchProviders()">
+      <mat-icon>refresh</mat-icon> Reintentar
+    </button>
+  </div>
+
+  <!-- Sin proveedores disponibles -->
+  <div class="no-providers" *ngIf="!isLoading && !errorMessage && countryProviders.length === 0">
+    <mat-icon>live_tv</mat-icon>
+    <p>No hay información de proveedores de streaming disponible para esta película.</p>
+  </div>
+
+  <!-- Proveedores disponibles -->
+  <div class="providers-content" *ngIf="!isLoading && !errorMessage && countryProviders.length > 0">
+    <mat-tab-group animationDuration="300ms" mat-align-tabs="center">
+      <mat-tab *ngFor="let country of countryProviders" [label]="country.countryName">
+        <div class="country-providers" *ngIf="hasProviders(country.providers)">
+          <!-- Streaming -->
+          <div class="provider-section" *ngIf="country.providers.flatrate && country.providers.flatrate.length > 0">
+            <h3 class="provider-type">
+              <mat-icon>stream</mat-icon>
+              <span>Streaming</span>
+            </h3>
+            <div class="providers-grid">
+              <div class="provider-item" *ngFor="let provider of country.providers.flatrate">
+                <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
+                <span class="provider-name">{{ provider.provider_name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alquiler -->
+          <div class="provider-section" *ngIf="country.providers.rent && country.providers.rent.length > 0">
+            <h3 class="provider-type">
+              <mat-icon>shopping_cart</mat-icon>
+              <span>Alquiler</span>
+            </h3>
+            <div class="providers-grid">
+              <div class="provider-item" *ngFor="let provider of country.providers.rent">
+                <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
+                <span class="provider-name">{{ provider.provider_name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Compra -->
+          <div class="provider-section" *ngIf="country.providers.buy && country.providers.buy.length > 0">
+            <h3 class="provider-type">
+              <mat-icon>shopping_bag</mat-icon>
+              <span>Compra</span>
+            </h3>
+            <div class="providers-grid">
+              <div class="provider-item" *ngFor="let provider of country.providers.buy">
+                <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
+                <span class="provider-name">{{ provider.provider_name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gratis -->
+          <div class="provider-section" *ngIf="country.providers.free && country.providers.free.length > 0">
+            <h3 class="provider-type">
+              <mat-icon>card_giftcard</mat-icon>
+              <span>Gratis</span>
+            </h3>
+            <div class="providers-grid">
+              <div class="provider-item" *ngFor="let provider of country.providers.free">
+                <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
+                <span class="provider-name">{{ provider.provider_name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Anuncios -->
+          <div class="provider-section" *ngIf="country.providers.ads && country.providers.ads.length > 0">
+            <h3 class="provider-type">
+              <mat-icon>campaign</mat-icon>
+              <span>Con anuncios</span>
+            </h3>
+            <div class="providers-grid">
+              <div class="provider-item" *ngFor="let provider of country.providers.ads">
+                <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
+                <span class="provider-name">{{ provider.provider_name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enlace a JustWatch -->
+          <div class="justwatch-link" *ngIf="country.providers.link">
+            <a [href]="country.providers.link" target="_blank" rel="noopener noreferrer" mat-raised-button color="primary">
+              <mat-icon>open_in_new</mat-icon>
+              Ver todas las opciones en JustWatch
+            </a>
+          </div>
+        </div>
+
+        <!-- Sin proveedores para este país -->
+        <div class="no-country-providers" *ngIf="!hasProviders(country.providers)">
+          <mat-icon>live_tv</mat-icon>
+          <p>No hay proveedores de streaming disponibles para {{ country.countryName }}.</p>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

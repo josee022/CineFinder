@@ -8,23 +8,62 @@
       </a>
       
       <div class="nav-links">
-        @for (item of navItems; track item.path) {
+        <!-- Enlaces principales -->
+        @for (item of mainNavItems; track item.path) {
           <a mat-button 
              [routerLink]="item.path" 
              routerLinkActive="active-link">
             <mat-icon>{{ item.icon }}</mat-icon>
-            <span>{{ item.label }}</span>
+            <span>{{ item.label | translate }}</span>
           </a>
         }
+        
+        <!-- Menú desplegable de películas -->
+        <button mat-button [matMenuTriggerFor]="moviesMenu" class="dropdown-button">
+          <mat-icon>movie</mat-icon>
+          <span>{{ 'common.movies' | translate }}</span>
+          <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #moviesMenu="matMenu" class="dropdown-menu">
+          @for (item of movieCategories; track item.path) {
+            <a mat-menu-item 
+               [routerLink]="item.path" 
+               routerLinkActive="active-link">
+              <mat-icon>{{ item.icon }}</mat-icon>
+              <span>{{ item.label | translate }}</span>
+            </a>
+          }
+        </mat-menu>
+        
+        <!-- Menú desplegable de exploración -->
+        <button mat-button [matMenuTriggerFor]="exploreMenu" class="dropdown-button">
+          <mat-icon>explore</mat-icon>
+          <span>{{ 'common.exploreMovies' | translate }}</span>
+          <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #exploreMenu="matMenu" class="dropdown-menu">
+          @for (item of exploreCategories; track item.path) {
+            <a mat-menu-item 
+               [routerLink]="item.path" 
+               routerLinkActive="active-link">
+              <mat-icon>{{ item.icon }}</mat-icon>
+              <span>{{ item.label | translate }}</span>
+            </a>
+          }
+        </mat-menu>
       </div>
       
-      <div class="search-container">
-        <app-search></app-search>
+      <div class="actions-container">
+        <div class="search-container">
+          <app-search></app-search>
+        </div>
+        
+        <app-language-selector></app-language-selector>
+        
+        <button mat-icon-button class="mobile-menu-button" (click)="toggleMobileMenu()">
+          <mat-icon>menu</mat-icon>
+        </button>
       </div>
-      
-      <button mat-icon-button class="mobile-menu-button" (click)="toggleMobileMenu()">
-        <mat-icon>menu</mat-icon>
-      </button>
     </div>
   </mat-toolbar>
 
@@ -44,16 +83,57 @@
       <app-search></app-search>
     </div>
     
+    <div class="mobile-language-selector">
+      <app-language-selector></app-language-selector>
+    </div>
+    
     <div class="mobile-nav-links">
-      @for (item of navItems; track item.path) {
+      <!-- Enlaces principales -->
+      @for (item of mainNavItems; track item.path) {
         <a mat-button 
            [routerLink]="item.path" 
            routerLinkActive="active-link"
            (click)="toggleMobileMenu()">
           <mat-icon>{{ item.icon }}</mat-icon>
-          <span>{{ item.label }}</span>
+          <span>{{ item.label | translate }}</span>
         </a>
       }
+      
+      <!-- Categoría de películas en móvil -->
+      <div class="mobile-category">
+        <div class="mobile-category-header">
+          <mat-icon>movie</mat-icon>
+          <span>{{ 'common.movies' | translate }}</span>
+        </div>
+        @for (item of movieCategories; track item.path) {
+          <a mat-button 
+             [routerLink]="item.path" 
+             routerLinkActive="active-link"
+             (click)="toggleMobileMenu()"
+             class="mobile-subcategory">
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label | translate }}</span>
+          </a>
+        }
+      </div>
+      
+      <!-- Categoría de exploración en móvil -->
+      <div class="mobile-category">
+        <div class="mobile-category-header">
+          <mat-icon>explore</mat-icon>
+          <span>{{ 'common.exploreMovies' | translate }}</span>
+        </div>
+        @for (item of exploreCategories; track item.path) {
+          <a mat-button 
+             [routerLink]="item.path" 
+             routerLinkActive="active-link"
+             (click)="toggleMobileMenu()"
+             class="mobile-subcategory">
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label | translate }}</span>
+          </a>
+        }
+      </div>
     </div>
   </div>
   

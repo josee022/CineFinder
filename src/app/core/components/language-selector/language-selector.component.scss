@@ -1,0 +1,32 @@
+.language-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .flag {
+    font-size: 1.2rem;
+  }
+}
+
+::ng-deep .language-menu {
+  min-width: 160px;
+  
+  .mat-mdc-menu-item {
+    display: flex;
+    align-items: center;
+    
+    &.active {
+      background-color: rgba(0, 0, 0, 0.04);
+      font-weight: 500;
+    }
+    
+    .flag {
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+    
+    .lang-name {
+      flex: 1;
+    }
+  }
+}

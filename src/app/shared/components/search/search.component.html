@@ -5,7 +5,7 @@
       <input 
         type="text" 
         matInput 
-        placeholder="Buscar películas..." 
+        placeholder="{{ 'search.searchPlaceholder' | translate }}" 
         [(ngModel)]="searchQuery"
         (input)="onSearchInput()"
         (keyup.enter)="onSearchSubmit()"
@@ -15,7 +15,6 @@
         *ngIf="searchQuery" 
         matSuffix 
         mat-icon-button 
-        aria-label="Limpiar" 
         (click)="searchQuery = ''; searchResults = []; showResults = false">
         <mat-icon>close</mat-icon>
       </button>
@@ -27,7 +26,7 @@
       class="search-button"
       [disabled]="!searchQuery.trim()"
       (click)="onSearchSubmit()">
-      Buscar
+      {{ 'common.search' | translate }}
     </button>
   </div>
 
@@ -36,7 +35,7 @@
       @if (isLoading) {
         <div class="loading-results">
           <div class="spinner"></div>
-          <span>Buscando...</span>
+          <span>{{ 'common.loading' | translate }}</span>
         </div>
       }
 
@@ -50,22 +49,23 @@
                   [alt]="movie.title">
               </div>
               <div class="search-result-info">
-                <h4>{{ movie.title }}</h4>
-                <div class="search-result-meta">
-                  <span class="year">{{ movie.release_date | slice:0:4 }}</span>
-                  <span class="rating">
-                    <mat-icon class="star-icon">star</mat-icon>
-                    {{ movie.vote_average | number:'1.1-1' }}
-                  </span>
-                </div>
+                <h4 class="search-result-title">{{ movie.title }}</h4>
+                <p class="search-result-year">{{ movie.release_date | date:'yyyy' }}</p>
               </div>
             </div>
           }
-          <div class="view-all-results">
-            <button mat-button color="primary" (click)="onSearchSubmit()">
-              Ver todos los resultados
+          <div class="search-results-footer">
+            <button 
+              mat-button 
+              color="primary" 
+              (click)="onSearchSubmit()">
+              {{ 'common.seeMore' | translate }}
             </button>
           </div>
+        </div>
+      } @else if (!isLoading) {
+        <div class="no-results">
+          <p>{{ 'common.noResults' | translate }}</p>
         </div>
       }
     </div>
