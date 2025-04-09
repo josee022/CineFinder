@@ -1,0 +1,18 @@
+<button 
+  mat-icon-button
+  [matTooltip]="'common.changeLanguage' | translate"
+  [matMenuTriggerFor]="languageMenu"
+  class="language-button">
+  <span class="flag">{{ getCurrentLanguageInfo()?.flag }}</span>
+</button>
+
+<mat-menu #languageMenu="matMenu" class="language-menu">
+  <button 
+    mat-menu-item 
+    *ngFor="let lang of languages" 
+    (click)="changeLanguage(lang.code)"
+    [class.active]="currentLang === lang.code">
+    <span class="flag">{{ lang.flag }}</span>
+    <span class="lang-name">{{ lang.name }}</span>
+  </button>
+</mat-menu>

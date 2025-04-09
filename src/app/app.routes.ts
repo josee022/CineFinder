@@ -1,20 +1,62 @@
 import { Routes } from '@angular/router';
-import { MovieListComponent } from './modules/movies/movie-list/movie-list.component';
-import { MovieDetailComponent } from './modules/movies/movie-detail/movie-detail.component';
-import { SearchResultsComponent } from './modules/movies/search-results/search-results.component';
-import { HomeComponent } from './modules/movies/home/home.component';
-import { PopularMoviesComponent } from './modules/movies/popular-movies/popular-movies.component';
-import { TopRatedMoviesComponent } from './modules/movies/top-rated-movies/top-rated-movies.component';
-import { UpcomingMoviesComponent } from './modules/movies/upcoming-movies/upcoming-movies.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'movies', component: MovieListComponent },
-  { path: 'movies/:id', component: MovieDetailComponent },
-  { path: 'popular', component: PopularMoviesComponent },
-  { path: 'top-rated', component: TopRatedMoviesComponent },
-  { path: 'upcoming', component: UpcomingMoviesComponent },
-  { path: 'search', component: SearchResultsComponent },
-  { path: '**', redirectTo: 'home' } // Ruta comodín para manejar rutas no encontradas
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full'
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./modules/home/home.component').then(m => m.HomeComponent),
+    title: 'CineFinder - Inicio'
+  },
+  {
+    path: 'movies/popular',
+    loadComponent: () => import('./modules/movies/movie-category/movie-category.component').then(m => m.MovieCategoryComponent),
+    data: { categoryType: 'popular' },
+    title: 'CineFinder - Películas Populares'
+  },
+  {
+    path: 'movies/top-rated',
+    loadComponent: () => import('./modules/movies/movie-category/movie-category.component').then(m => m.MovieCategoryComponent),
+    data: { categoryType: 'top-rated' },
+    title: 'CineFinder - Películas Mejor Valoradas'
+  },
+  {
+    path: 'movies/upcoming',
+    loadComponent: () => import('./modules/movies/movie-category/movie-category.component').then(m => m.MovieCategoryComponent),
+    data: { categoryType: 'upcoming' },
+    title: 'CineFinder - Próximos Estrenos'
+  },
+  {
+    path: 'movies/:id',
+    loadComponent: () => import('./modules/movies/movie-detail/movie-detail.component').then(m => m.MovieDetailComponent),
+    title: 'CineFinder - Detalle de Película'
+  },
+  {
+    path: 'search',
+    loadComponent: () => import('./modules/movies/search-results/search-results.component').then(m => m.SearchResultsComponent),
+    title: 'CineFinder - Resultados de Búsqueda'
+  },
+  {
+    path: 'movies/filters',
+    loadComponent: () => import('./modules/movies/advanced-filters/advanced-filters.component').then(m => m.AdvancedFiltersComponent),
+    title: 'CineFinder - Filtros Avanzados'
+  },
+  {
+    path: 'movies/discover',
+    loadComponent: () => import('./modules/movies/discover-results/discover-results.component').then(m => m.DiscoverResultsComponent),
+    title: 'CineFinder - Descubrir Películas'
+  },
+  {
+    path: 'movies/calendar',
+    loadComponent: () => import('./modules/movies/release-calendar/release-calendar.component').then(m => m.ReleaseCalendarComponent),
+    title: 'CineFinder - Calendario de Estrenos'
+  },
+  {
+    path: '**',
+    loadComponent: () => import('./modules/not-found/not-found.component').then(m => m.NotFoundComponent),
+    title: 'CineFinder - Página no encontrada'
+  }
 ];

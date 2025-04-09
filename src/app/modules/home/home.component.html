@@ -1,0 +1,153 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Descubre el mundo del cine</h1>
+      <p class="hero-description">
+        Explora miles de películas, encuentra información detallada, descubre dónde verlas y mantente al día con los próximos estrenos.
+      </p>
+      <div class="hero-actions">
+        <button mat-raised-button color="primary" routerLink="/movies/filters">
+          <mat-icon>filter_list</mat-icon>
+          Explorar películas
+        </button>
+        <button mat-raised-button routerLink="/movies/calendar">
+          <mat-icon>calendar_today</mat-icon>
+          Ver calendario de estrenos
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Indicador de carga -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Cargando películas...</p>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div class="error-container" *ngIf="!isLoading && errorMessage">
+    <mat-icon>error_outline</mat-icon>
+    <h3>¡Ups! Algo salió mal</h3>
+    <p>{{ errorMessage }}</p>
+    <button mat-raised-button color="primary" (click)="loadHomeData()">
+      <mat-icon>refresh</mat-icon>
+      Intentar de nuevo
+    </button>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="home-content" *ngIf="!isLoading && !errorMessage">
+    <!-- Sección de películas populares -->
+    <section class="movies-section">
+      <div class="section-header">
+        <h2 class="section-title">Películas Populares</h2>
+        <a mat-button color="primary" routerLink="/movies/popular">
+          Ver todas
+          <mat-icon>chevron_right</mat-icon>
+        </a>
+      </div>
+      
+      <div class="movies-grid">
+        <div class="movie-card" *ngFor="let movie of popularMovies" [routerLink]="['/movies', movie.id]">
+          <div class="movie-poster">
+            <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title" loading="lazy">
+            <div class="movie-rating" *ngIf="movie.vote_average > 0">
+              <mat-icon>star</mat-icon>
+              <span>{{ movie.vote_average.toFixed(1) }}</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3 class="movie-title">{{ movie.title }}</h3>
+            <p class="movie-overview">{{ truncateText(movie.overview, 100) }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Sección de películas mejor valoradas -->
+    <section class="movies-section">
+      <div class="section-header">
+        <h2 class="section-title">Mejor Valoradas</h2>
+        <a mat-button color="primary" routerLink="/movies/top-rated">
+          Ver todas
+          <mat-icon>chevron_right</mat-icon>
+        </a>
+      </div>
+      
+      <div class="movies-grid">
+        <div class="movie-card" *ngFor="let movie of topRatedMovies" [routerLink]="['/movies', movie.id]">
+          <div class="movie-poster">
+            <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title" loading="lazy">
+            <div class="movie-rating" *ngIf="movie.vote_average > 0">
+              <mat-icon>star</mat-icon>
+              <span>{{ movie.vote_average.toFixed(1) }}</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3 class="movie-title">{{ movie.title }}</h3>
+            <p class="movie-overview">{{ truncateText(movie.overview, 100) }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Sección de próximos estrenos -->
+    <section class="movies-section">
+      <div class="section-header">
+        <h2 class="section-title">Próximos Estrenos</h2>
+        <a mat-button color="primary" routerLink="/movies/upcoming">
+          Ver todos
+          <mat-icon>chevron_right</mat-icon>
+        </a>
+      </div>
+      
+      <div class="movies-grid">
+        <div class="movie-card" *ngFor="let movie of upcomingMovies" [routerLink]="['/movies', movie.id]">
+          <div class="movie-poster">
+            <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title" loading="lazy">
+            <div class="movie-release-date" *ngIf="movie.release_date">
+              <mat-icon>calendar_today</mat-icon>
+              <span>{{ movie.release_date | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          <div class="movie-info">
+            <h3 class="movie-title">{{ movie.title }}</h3>
+            <p class="movie-overview">{{ truncateText(movie.overview, 100) }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Sección de características -->
+    <section class="features-section">
+      <h2 class="section-title">Características de CineFinder</h2>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <mat-icon>search</mat-icon>
+          <h3>Búsqueda Avanzada</h3>
+          <p>Encuentra películas por género, año, valoración y mucho más con nuestros filtros avanzados.</p>
+        </div>
+        
+        <div class="feature-card">
+          <mat-icon>movie</mat-icon>
+          <h3>Información Detallada</h3>
+          <p>Accede a información completa sobre cada película, incluyendo reparto, equipo técnico y recomendaciones.</p>
+        </div>
+        
+        <div class="feature-card">
+          <mat-icon>live_tv</mat-icon>
+          <h3>Dónde Ver</h3>
+          <p>Descubre en qué plataformas de streaming está disponible cada película para verla al instante.</p>
+        </div>
+        
+        <div class="feature-card">
+          <mat-icon>event</mat-icon>
+          <h3>Calendario de Estrenos</h3>
+          <p>Mantente al día con los próximos estrenos y no te pierdas ninguna película.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

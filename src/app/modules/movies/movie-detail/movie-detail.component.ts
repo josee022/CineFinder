@@ -11,6 +11,7 @@ import { ApiService } from '../../../core/api.service';
 import { ScrollService } from '../../../core/services/scroll.service';
 import { MovieDetails } from '../../../core/models/movie.model';
 import { MovieRecommendationsComponent } from '../movie-recommendations/movie-recommendations.component';
+import { WatchProvidersComponent } from '../watch-providers/watch-providers.component';
 import { Subscription, filter } from 'rxjs';
 
 @Component({
@@ -24,7 +25,8 @@ import { Subscription, filter } from 'rxjs';
     MatChipsModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MovieRecommendationsComponent
+    MovieRecommendationsComponent,
+    WatchProvidersComponent
   ],
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.scss']
