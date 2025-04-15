@@ -5,8 +5,8 @@
       <p class="results-count" *ngIf="!isLoading && !errorMessage">
         Mostrando {{ (currentPage - 1) * pageSize + 1 }}-{{ (currentPage - 1) * pageSize + movies.length }} de {{ totalResults }} películas
       </p>
-      <button mat-button color="primary" class="filter-button" (click)="toggleFilters()">
-        <mat-icon>filter_list</mat-icon>
+      <button mat-raised-button color="primary" class="filter-button" (click)="toggleFilters()">
+        <mat-icon>{{ showFilters ? 'filter_list_off' : 'filter_list' }}</mat-icon>
         {{ showFilters ? ('filters.hideFilters' | translate) : ('filters.showFilters' | translate) }}
       </button>
     </div>
@@ -60,9 +60,16 @@
               <h3 class="movie-title">{{ movie.title }}</h3>
               <p class="movie-year">{{ movie.release_date | slice:0:4 }}</p>
               <p class="movie-overview">{{ (movie.overview.length > 100) ? (movie.overview | slice:0:100) + '...' : movie.overview }}</p>
-              <button mat-button color="primary" (click)="navigateToMovieDetail(movie.id); $event.stopPropagation()">
-                <mat-icon>info</mat-icon> Ver detalles
-              </button>
+              <div class="movie-footer">
+                <button mat-flat-button color="primary" class="details-button" (click)="navigateToMovieDetail(movie.id); $event.stopPropagation()">
+                  <mat-icon>info</mat-icon> Ver detalles
+                </button>
+                <div class="movie-genres" *ngIf="getMovieGenres(movie.id).length > 0">
+                  <span class="genre-chip" *ngFor="let genre of getMovieGenres(movie.id).slice(0, 2)">
+                    {{ genre }}
+                  </span>
+                </div>
+              </div>
             </div>
           </mat-card>
         }

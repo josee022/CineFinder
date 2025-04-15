@@ -7,10 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ApiService } from '../../../core/api.service';
 import { ScrollService } from '../../../core/services/scroll.service';
-import { Movie } from '../../../core/models/movie.model';
+import { Movie, Genre, MovieResponse } from '../../../core/models/movie.model';
 import { MovieFilters } from '../../../core/models/filters.model';
 import { MovieFiltersComponent } from '../movie-filters/movie-filters.component';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { Observable } from 'rxjs';
 
 type CategoryType = 'popular' | 'top_rated' | 'top-rated' | 'upcoming' | 'now_playing' | 'now-playing' | 'discover';
 
@@ -48,6 +49,10 @@ export class MovieCategoryComponent implements OnInit {
     sortBy: 'popularity.desc'
   };
   
+  // Géneros
+  genres: Genre[] = [];
+  movieGenresMap: Map<number, string[]> = new Map();
+  
   categoryTitles: Record<CategoryType, string> = {
     popular: 'Películas Populares',
     top_rated: 'Películas Mejor Valoradas',
@@ -66,6 +71,9 @@ export class MovieCategoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Cargar los géneros primero
+    this.loadGenres();
+    
     // Primero intentamos obtener el tipo de categoría de los datos de la ruta
     this.route.data.subscribe(data => {
       if (data['categoryType']) {
@@ -91,30 +99,47 @@ export class MovieCategoryComponent implements OnInit {
     });
   }
 
+  loadGenres(): void {
+    this.apiService.getGenres().subscribe({
+      next: (genres) => {
+        this.genres = genres;
+        // Si ya tenemos películas cargadas, mapeamos los géneros inmediatamente
+        if (this.movies.length > 0) {
+          this.mapGenresToMovies();
+        }
+      },
+      error: (error) => {
+        console.error('Error loading genres:', error);
+      }
+    });
+  }
+  
   loadMovies(): void {
     this.isLoading = true;
+    this.errorMessage = '';
     this.scrollService.scrollToTop();
     
-    if (this.categoryType === 'discover') {
-      this.loadMoviesWithFilters();
-      return;
-    }
+    // Mapeo de tipos de categoría para manejar guiones y guiones bajos
+    const categoryTypeMap: Record<string, string> = {
+      'top-rated': 'top_rated',
+      'now-playing': 'now_playing'
+    };
     
-    let apiCall;
+    const mappedType = categoryTypeMap[this.categoryType] || this.categoryType;
     
-    switch (this.categoryType) {
+    let apiCall: Observable<MovieResponse>;
+    
+    switch (mappedType) {
       case 'popular':
         apiCall = this.apiService.getPopularMovies(this.currentPage);
         break;
       case 'top_rated':
-      case 'top-rated':
         apiCall = this.apiService.getTopRatedMovies(this.currentPage);
         break;
       case 'upcoming':
         apiCall = this.apiService.getUpcomingMovies(this.currentPage);
         break;
       case 'now_playing':
-      case 'now-playing':
         apiCall = this.apiService.getNowPlayingMovies(this.currentPage);
         break;
       default:
@@ -122,32 +147,52 @@ export class MovieCategoryComponent implements OnInit {
     }
     
     apiCall.subscribe({
-      next: (data) => {
-        this.movies = data.results;
-        this.totalPages = data.total_pages;
-        this.totalResults = data.total_results;
+      next: (response: MovieResponse) => {
+        this.movies = response.results;
+        this.totalPages = response.total_pages;
+        this.totalResults = response.total_results;
         this.isLoading = false;
+        this.errorMessage = '';
+        
+        // Mapear los géneros a las películas
+        if (this.genres.length > 0) {
+          this.mapGenresToMovies();
+        } else {
+          // Si los géneros aún no se han cargado, los cargamos primero
+          this.loadGenres();
+        }
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading movies:', error);
-        this.errorMessage = 'Error al cargar las películas. Por favor, inténtalo de nuevo más tarde.';
         this.isLoading = false;
+        this.errorMessage = 'Error al cargar las películas. Intenta de nuevo.';
       }
     });
   }
   
   loadMoviesWithFilters(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    
     this.apiService.discoverMovies(this.currentFilters, this.currentPage).subscribe({
-      next: (data) => {
-        this.movies = data.results;
-        this.totalPages = data.total_pages;
-        this.totalResults = data.total_results;
+      next: (response: MovieResponse) => {
+        this.movies = response.results;
+        this.totalPages = response.total_pages;
+        this.totalResults = response.total_results;
         this.isLoading = false;
+        
+        // Mapear los géneros a las películas
+        if (this.genres.length > 0) {
+          this.mapGenresToMovies();
+        } else {
+          // Si los géneros aún no se han cargado, los cargamos primero
+          this.loadGenres();
+        }
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading movies with filters:', error);
-        this.errorMessage = 'Error al cargar las películas. Por favor, inténtalo de nuevo más tarde.';
         this.isLoading = false;
+        this.errorMessage = 'Error al cargar las películas. Intenta de nuevo.';
       }
     });
   }
@@ -175,19 +220,44 @@ export class MovieCategoryComponent implements OnInit {
   onFiltersChanged(filters: MovieFilters): void {
     this.currentFilters = filters;
     this.currentPage = 1;
+    this.loadMoviesWithFilters();
     
-    // Si no estamos en la categoría discover, navegar a ella
-    if (this.categoryType !== 'discover') {
-      this.router.navigate(['/explore', 'discover'], {
-        queryParams: { page: 1 }
-      });
-    } else {
-      this.loadMoviesWithFilters();
-    }
+    // Actualizar la URL con el nuevo número de página
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: 1 },
+      queryParamsHandling: 'merge'
+    });
   }
   
   // Función para el trackBy de ngFor
   trackMovieById(index: number, movie: Movie): number {
     return movie.id;
+  }
+  
+  // Mapear los géneros a las películas
+  mapGenresToMovies(): void {
+    this.movieGenresMap.clear();
+    
+    if (this.genres.length === 0 || this.movies.length === 0) {
+      return;
+    }
+    
+    this.movies.forEach(movie => {
+      if (movie.genre_ids && movie.genre_ids.length > 0) {
+        const genreNames = movie.genre_ids
+          .map(genreId => this.genres.find(g => g.id === genreId)?.name)
+          .filter(name => name !== undefined) as string[];
+        
+        this.movieGenresMap.set(movie.id, genreNames);
+      }
+    });
+    
+    console.log('Géneros mapeados:', this.movieGenresMap);
+  }
+  
+  // Obtener los géneros de una película
+  getMovieGenres(movieId: number): string[] {
+    return this.movieGenresMap.get(movieId) || [];
   }
 }

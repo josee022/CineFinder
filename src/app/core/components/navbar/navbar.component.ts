@@ -45,9 +45,7 @@ export class NavbarComponent implements OnInit {
   
   // Categorías de exploración para el menú desplegable
   exploreCategories = [
-    { label: 'common.advancedSearch', path: '/explore/filters', icon: 'filter_list' },
-    { label: 'common.discover', path: '/explore/discover', icon: 'explore' },
-    { label: 'common.releaseCalendar', path: '/explore/calendar', icon: 'calendar_today' }
+    { label: 'common.discover', path: '/explore/discover', icon: 'explore' }
   ];
   
   isMobileMenuOpen = false;

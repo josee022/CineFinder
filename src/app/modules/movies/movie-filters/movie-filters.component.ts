@@ -113,6 +113,20 @@ export class MovieFiltersComponent implements OnInit {
       includeAdult: formValues.includeAdult
     };
     
+    // No emitimos el evento aquí para que los filtros no se apliquen automáticamente
+  }
+  
+  applyFilters(): void {
+    const formValues = this.filtersForm.value;
+    
+    const filters: MovieFilters = {
+      sortBy: formValues.sortBy,
+      year: formValues.year,
+      genres: formValues.genres && formValues.genres.length > 0 ? formValues.genres : undefined,
+      voteAverageGte: formValues.voteAverageGte > 0 ? formValues.voteAverageGte : undefined,
+      includeAdult: formValues.includeAdult
+    };
+    
     this.filtersChanged.emit(filters);
   }
   
@@ -125,7 +139,7 @@ export class MovieFiltersComponent implements OnInit {
       includeAdult: false
     });
     
-    this.updateFilters();
+    this.applyFilters();
   }
   
   // Helpers para la interfaz

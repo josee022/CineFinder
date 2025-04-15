@@ -75,10 +75,14 @@
       </mat-checkbox>
     </div>
     
-    <div class="filters-actions">
+    <div class="filter-actions">
       <button mat-raised-button color="warn" (click)="resetFilters()">
         <mat-icon>refresh</mat-icon>
         {{ 'filters.reset' | translate }}
+      </button>
+      <button mat-raised-button color="primary" type="button" (click)="applyFilters()">
+        <mat-icon>filter_list</mat-icon>
+        {{ 'filters.apply' | translate }}
       </button>
     </div>
   </form>
