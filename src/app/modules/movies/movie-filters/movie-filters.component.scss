@@ -1,0 +1,116 @@
+.filters-container {
+  padding: 1rem;
+  background-color: rgba(30, 30, 30, 0.7);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.filters-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.filters-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.filter-section {
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-divider {
+  margin: 0.5rem 0;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.loading-genres {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  p {
+    color: var(--muted-text);
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.rating-slider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  .rating-value {
+    min-width: 2rem;
+    text-align: center;
+    font-weight: 500;
+    color: var(--primary-color);
+  }
+}
+
+.filters-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+::ng-deep {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+  
+  .mat-mdc-form-field-infix {
+    min-height: 40px !important;
+  }
+  
+  .mat-mdc-text-field-wrapper {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .mat-mdc-form-field-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .mat-mdc-select-value-text {
+    color: white;
+  }
+  
+  .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .mat-mdc-checkbox .mdc-form-field {
+    color: white;
+  }
+}

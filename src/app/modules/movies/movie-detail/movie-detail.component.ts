@@ -16,6 +16,7 @@ import { MovieImagesComponent } from '../movie-images/movie-images.component';
 import { MovieKeywordsComponent } from '../movie-keywords/movie-keywords.component';
 import { MovieReviewsComponent } from '../movie-reviews/movie-reviews.component';
 import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { Subscription, filter } from 'rxjs';
 
 @Component({
@@ -35,7 +36,8 @@ import { Subscription, filter } from 'rxjs';
     MovieImagesComponent,
     MovieKeywordsComponent,
     MovieReviewsComponent,
-    SafeUrlPipe
+    SafeUrlPipe,
+    TranslatePipe
   ],
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.scss']

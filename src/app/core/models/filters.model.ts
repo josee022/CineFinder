@@ -11,6 +11,7 @@ export interface MovieFilters {
   releaseDateLte?: string;
   withWatchProviders?: number[];
   watchRegion?: string;
+  with_keywords?: number[];
 }
 
 export type SortOption = 

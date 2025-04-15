@@ -1,7 +1,10 @@
 <div class="search-results-container">
   <div class="container">
     <div class="search-header">
-      <h1 class="search-title">Resultados de búsqueda: "{{ searchQuery }}"</h1>
+      <!-- Título para búsqueda normal -->
+      <h1 class="search-title" *ngIf="searchQuery">Resultados de búsqueda: "{{ searchQuery }}"</h1>
+      <!-- Título para búsqueda por palabra clave -->
+      <h1 class="search-title" *ngIf="keywordName">Películas con la palabra clave: "{{ keywordName }}"</h1>
       <p class="results-count" *ngIf="!isLoading && !errorMessage && totalResults > 0">
         Mostrando {{ (currentPage - 1) * pageSize + 1 }}-{{ (currentPage - 1) * pageSize + searchResults.length }} de {{ totalResults }} resultados
       </p>
@@ -30,7 +33,10 @@
     @if (!isLoading && !errorMessage && searchResults.length === 0) {
       <div class="no-results-container">
         <mat-icon>search_off</mat-icon>
-        <h2>No se encontraron resultados para "{{ searchQuery }}"</h2>
+        <!-- Mensaje para búsqueda normal -->
+        <h2 *ngIf="searchQuery">No se encontraron resultados para "{{ searchQuery }}"</h2>
+        <!-- Mensaje para búsqueda por palabra clave -->
+        <h2 *ngIf="keywordName">No se encontraron películas con la palabra clave "{{ keywordName }}"</h2>
         <p>Intenta con otros términos de búsqueda</p>
         <button mat-raised-button color="primary" routerLink="/home">
           Volver al inicio

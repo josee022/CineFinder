@@ -25,7 +25,7 @@ export class MovieKeywordsComponent implements OnInit {
   
   searchByKeyword(keywordId: number, keywordName: string): void {
     // Navegar a la búsqueda por palabra clave
-    this.router.navigate(['/explore/discover'], { 
+    this.router.navigate(['/search'], { 
       queryParams: { 
         with_keywords: keywordId,
         keyword_name: keywordName 

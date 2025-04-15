@@ -165,13 +165,39 @@
 .content-section {
   padding: 30px 0;
   
-  ::ng-deep .mat-mdc-tab-group {
+  ::ng-deep .custom-tabs {
     .mat-mdc-tab-header {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .mat-mdc-tab-label-content {
-      color: var(--light-text);
+      color: white;
+      font-weight: 500;
+      font-size: 16px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    
+    .mdc-tab {
+      opacity: 0.7;
+      
+      &.mdc-tab--active {
+        opacity: 1;
+        background-color: rgba(255, 255, 255, 0.1);
+        
+        .mat-mdc-tab-label-content {
+          font-weight: 600;
+        }
+      }
+      
+      &:hover {
+        opacity: 0.9;
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+    }
+    
+    .mdc-tab-indicator__content--underline {
+      border-color: var(--primary-color);
+      border-width: 3px;
     }
   }
 }

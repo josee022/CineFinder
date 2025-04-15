@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { MovieResponse, MovieDetails, ImageResponse, KeywordResponse, ReviewResponse } from './models/movie.model';
+import { Observable, map } from 'rxjs';
+import { MovieResponse, MovieDetails, ImageResponse, KeywordResponse, ReviewResponse, Genre } from './models/movie.model';
 import { 
   MovieFilters, 
   WatchProviderResponse, 
@@ -57,6 +57,12 @@ export class ApiService {
       `${this.baseUrl}/movie/upcoming?api_key=${this.apiKey}&language=${this.language}&page=${page}&region=${this.region}`
     );
   }
+  
+  getNowPlayingMovies(page: number = 1): Observable<MovieResponse> {
+    return this.http.get<MovieResponse>(
+      `${this.baseUrl}/movie/now_playing?api_key=${this.apiKey}&language=${this.language}&page=${page}&region=${this.region}`
+    );
+  }
 
   getMovieRecommendations(movieId: number, page: number = 1): Observable<MovieResponse> {
     return this.http.get<MovieResponse>(
@@ -76,10 +82,11 @@ export class ApiService {
     );
   }
 
-  getGenres(): Observable<any> {
-    return this.http.get<any>(
-      `${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=${this.language}`
-    );
+  getGenres(): Observable<Genre[]> {
+    return this.http.get<{genres: Genre[]}>(`${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=${this.language}`)
+      .pipe(
+        map((response: {genres: Genre[]}) => response.genres)
+      );
   }
 
   discoverMovies(filters: MovieFilters, page: number = 1): Observable<MovieResponse> {
@@ -89,10 +96,7 @@ export class ApiService {
       .set('page', page.toString())
       .set('region', this.region);
     
-    if (filters.query) {
-      params = params.set('query', filters.query);
-    }
-    
+    // Añadir filtros a los parámetros
     if (filters.year) {
       params = params.set('primary_release_year', filters.year.toString());
     }
@@ -134,9 +138,11 @@ export class ApiService {
       
       if (filters.watchRegion) {
         params = params.set('watch_region', filters.watchRegion);
-      } else {
-        params = params.set('watch_region', this.region);
       }
+    }
+    
+    if (filters.with_keywords && filters.with_keywords.length > 0) {
+      params = params.set('with_keywords', filters.with_keywords.join(','));
     }
     
     return this.http.get<MovieResponse>(`${this.baseUrl}/discover/movie`, { params });
@@ -202,6 +208,7 @@ export class ApiService {
     );
   }
 
+  // Obtener detalles de una colección
   getCollection(collectionId: number): Observable<any> {
     return this.http.get<any>(
       `${this.baseUrl}/collection/${collectionId}?api_key=${this.apiKey}&language=${this.language}`

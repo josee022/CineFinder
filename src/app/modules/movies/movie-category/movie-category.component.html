@@ -5,6 +5,18 @@
       <p class="results-count" *ngIf="!isLoading && !errorMessage">
         Mostrando {{ (currentPage - 1) * pageSize + 1 }}-{{ (currentPage - 1) * pageSize + movies.length }} de {{ totalResults }} películas
       </p>
+      <button mat-button color="primary" class="filter-button" (click)="toggleFilters()">
+        <mat-icon>filter_list</mat-icon>
+        {{ showFilters ? ('filters.hideFilters' | translate) : ('filters.showFilters' | translate) }}
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-wrapper" *ngIf="showFilters">
+      <app-movie-filters 
+        [initialFilters]="currentFilters" 
+        (filtersChanged)="onFiltersChanged($event)">
+      </app-movie-filters>
     </div>
 
     <!-- Loading indicator -->
@@ -63,24 +75,16 @@
         }
       </div>
 
-      <!-- Paginación simplificada -->
+      <!-- Paginación con MatPaginator -->
       @if (totalPages > 1) {
-        <div class="custom-pagination">
-          <button 
-            mat-raised-button 
-            [disabled]="currentPage === 1"
-            (click)="onPageChange(currentPage - 1)"
-            class="pagination-button">
-            <mat-icon>chevron_left</mat-icon> Anterior
-          </button>
-          <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
-          <button 
-            mat-raised-button 
-            [disabled]="currentPage === totalPages"
-            (click)="onPageChange(currentPage + 1)"
-            class="pagination-button">
-            Siguiente <mat-icon>chevron_right</mat-icon>
-          </button>
+        <div class="pagination-container">
+          <mat-paginator
+            [length]="totalResults"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPage - 1"
+            [hidePageSize]="true"
+            (page)="onPageChange($event)">
+          </mat-paginator>
         </div>
       }
     }

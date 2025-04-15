@@ -1,28 +1,37 @@
-import { Component, OnInit, Input, PLATFORM_ID, Inject } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { ApiService } from '../../../core/api.service';
 import { ScrollService } from '../../../core/services/scroll.service';
 import { Movie } from '../../../core/models/movie.model';
+import { MovieFilters } from '../../../core/models/filters.model';
+import { MovieFiltersComponent } from '../movie-filters/movie-filters.component';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+
+type CategoryType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing' | 'discover';
 
 @Component({
   selector: 'app-movie-category',
   standalone: true,
   imports: [
     CommonModule,
-    MatIconModule,
+    RouterModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MovieFiltersComponent,
+    TranslatePipe
   ],
   templateUrl: './movie-category.component.html',
   styleUrls: ['./movie-category.component.scss']
 })
 export class MovieCategoryComponent implements OnInit {
-  @Input() categoryType: 'popular' | 'top-rated' | 'upcoming' = 'popular';
-  
+  categoryType: CategoryType = 'popular';
   movies: Movie[] = [];
   isLoading = true;
   errorMessage = '';
@@ -33,38 +42,52 @@ export class MovieCategoryComponent implements OnInit {
   totalResults = 0;
   pageSize = 20;
   
-  // Títulos de categorías en español
-  categoryTitles = {
-    'popular': 'Películas Populares',
-    'top-rated': 'Películas Mejor Valoradas',
-    'upcoming': 'Próximos Estrenos'
+  // Filtros
+  showFilters = false;
+  currentFilters: MovieFilters = {
+    sortBy: 'popularity.desc'
+  };
+  
+  categoryTitles: Record<CategoryType, string> = {
+    popular: 'Películas Populares',
+    top_rated: 'Películas Mejor Valoradas',
+    upcoming: 'Próximos Estrenos',
+    now_playing: 'En Cartelera',
+    discover: 'Descubrir Películas'
   };
 
   constructor(
     private apiService: ApiService,
-    private router: Router,
     private route: ActivatedRoute,
-    private scrollService: ScrollService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private router: Router,
+    private scrollService: ScrollService
   ) {}
 
   ngOnInit(): void {
-    // Obtener el tipo de categoría de los datos de la ruta
-    this.route.data.subscribe(data => {
-      if (data['categoryType']) {
-        this.categoryType = data['categoryType'];
+    this.route.params.subscribe(params => {
+      if (params['category']) {
+        this.categoryType = params['category'] as CategoryType;
+        this.loadMovies();
       }
     });
     
-    this.route.queryParamMap.subscribe(params => {
-      this.currentPage = Number(params.get('page')) || 1;
-      this.loadMovies();
-      this.scrollService.scrollToTop();
+    this.route.queryParams.subscribe(params => {
+      const page = Number(params['page']) || 1;
+      if (page !== this.currentPage) {
+        this.currentPage = page;
+        this.loadMovies();
+      }
     });
   }
 
   loadMovies(): void {
     this.isLoading = true;
+    this.scrollService.scrollToTop();
+    
+    if (this.categoryType === 'discover') {
+      this.loadMoviesWithFilters();
+      return;
+    }
     
     let apiCall;
     
@@ -72,11 +95,14 @@ export class MovieCategoryComponent implements OnInit {
       case 'popular':
         apiCall = this.apiService.getPopularMovies(this.currentPage);
         break;
-      case 'top-rated':
+      case 'top_rated':
         apiCall = this.apiService.getTopRatedMovies(this.currentPage);
         break;
       case 'upcoming':
         apiCall = this.apiService.getUpcomingMovies(this.currentPage);
+        break;
+      case 'now_playing':
+        apiCall = this.apiService.getNowPlayingMovies(this.currentPage);
         break;
       default:
         apiCall = this.apiService.getPopularMovies(this.currentPage);
@@ -90,27 +116,61 @@ export class MovieCategoryComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = `Error al cargar las ${this.categoryTitles[this.categoryType].toLowerCase()}. Por favor, inténtalo de nuevo más tarde.`;
+        console.error('Error loading movies:', error);
+        this.errorMessage = 'Error al cargar las películas. Por favor, inténtalo de nuevo más tarde.';
         this.isLoading = false;
-        console.error(`Error loading ${this.categoryType} movies:`, error);
+      }
+    });
+  }
+  
+  loadMoviesWithFilters(): void {
+    this.apiService.discoverMovies(this.currentFilters, this.currentPage).subscribe({
+      next: (data) => {
+        this.movies = data.results;
+        this.totalPages = data.total_pages;
+        this.totalResults = data.total_results;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading movies with filters:', error);
+        this.errorMessage = 'Error al cargar las películas. Por favor, inténtalo de nuevo más tarde.';
+        this.isLoading = false;
       }
     });
   }
 
-  onPageChange(pageNumber: number): void {
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1;
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { page: pageNumber },
+      queryParams: { page: this.currentPage },
       queryParamsHandling: 'merge'
-    }).then(() => {
-      this.scrollService.scrollToTop();
     });
   }
 
   navigateToMovieDetail(movieId: number): void {
     this.router.navigate(['/movies', movieId]);
   }
-
+  
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+  }
+  
+  onFiltersChanged(filters: MovieFilters): void {
+    this.currentFilters = filters;
+    this.currentPage = 1;
+    
+    // Si no estamos en la categoría discover, navegar a ella
+    if (this.categoryType !== 'discover') {
+      this.router.navigate(['/explore', 'discover'], {
+        queryParams: { page: 1 }
+      });
+    } else {
+      this.loadMoviesWithFilters();
+    }
+  }
+  
+  // Función para el trackBy de ngFor
   trackMovieById(index: number, movie: Movie): number {
     return movie.id;
   }
