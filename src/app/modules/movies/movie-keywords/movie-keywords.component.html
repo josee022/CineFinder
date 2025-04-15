@@ -1,0 +1,18 @@
+<div class="keywords-container" *ngIf="hasKeywords()">
+  <h2 class="section-title">{{ 'movieDetail.keywords' | translate }}</h2>
+  
+  <div class="keywords-list">
+    <mat-chip-set>
+      <mat-chip 
+        *ngFor="let keyword of keywords?.keywords" 
+        (click)="searchByKeyword(keyword.id, keyword.name)"
+        class="keyword-chip">
+        {{ keyword.name }}
+      </mat-chip>
+    </mat-chip-set>
+  </div>
+</div>
+
+<div class="no-keywords" *ngIf="!hasKeywords()">
+  <p>{{ 'movieDetail.noKeywords' | translate }}</p>
+</div>

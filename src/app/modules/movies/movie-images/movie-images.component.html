@@ -1,0 +1,78 @@
+<div class="images-container" *ngIf="hasImages()">
+  <h2 class="section-title">{{ 'movieDetail.images' | translate }}</h2>
+  
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="300ms" class="images-tabs">
+    <!-- Backdrops Tab -->
+    <mat-tab label="{{ 'movieDetail.backdrops' | translate }} ({{ images?.backdrops?.length || 0 }})" 
+             [disabled]="!images?.backdrops?.length">
+      <div class="images-grid backdrops-grid">
+        <div class="image-item" *ngFor="let backdrop of images?.backdrops; let i = index" 
+             (click)="openImageViewer(images!.backdrops, i)">
+          <div class="image-wrapper">
+            <img [src]="getImageUrl(backdrop.file_path, 'w500')" [alt]="title + ' backdrop'" loading="lazy">
+            <div class="image-overlay">
+              <mat-icon>zoom_in</mat-icon>
+            </div>
+          </div>
+          <div class="image-info">
+            <div class="image-resolution">{{ backdrop.width }}x{{ backdrop.height }}</div>
+            <div class="image-rating" *ngIf="backdrop.vote_count > 0">
+              <mat-icon class="star-icon">star</mat-icon>
+              <span>{{ backdrop.vote_average | number:'1.1-1' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    
+    <!-- Posters Tab -->
+    <mat-tab label="{{ 'movieDetail.posters' | translate }} ({{ images?.posters?.length || 0 }})" 
+             [disabled]="!images?.posters?.length">
+      <div class="images-grid posters-grid">
+        <div class="image-item" *ngFor="let poster of images?.posters; let i = index" 
+             (click)="openImageViewer(images!.posters, i)">
+          <div class="image-wrapper">
+            <img [src]="getImageUrl(poster.file_path, 'w342')" [alt]="title + ' poster'" loading="lazy">
+            <div class="image-overlay">
+              <mat-icon>zoom_in</mat-icon>
+            </div>
+          </div>
+          <div class="image-info">
+            <div class="image-resolution">{{ poster.width }}x{{ poster.height }}</div>
+            <div class="image-rating" *ngIf="poster.vote_count > 0">
+              <mat-icon class="star-icon">star</mat-icon>
+              <span>{{ poster.vote_average | number:'1.1-1' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    
+    <!-- Logos Tab -->
+    <mat-tab label="{{ 'movieDetail.logos' | translate }} ({{ images?.logos?.length || 0 }})" 
+             [disabled]="!images?.logos?.length">
+      <div class="images-grid logos-grid">
+        <div class="image-item" *ngFor="let logo of images?.logos; let i = index" 
+             (click)="openImageViewer(images!.logos, i)">
+          <div class="image-wrapper logo-wrapper">
+            <img [src]="getImageUrl(logo.file_path, 'w300')" [alt]="title + ' logo'" loading="lazy">
+            <div class="image-overlay">
+              <mat-icon>zoom_in</mat-icon>
+            </div>
+          </div>
+          <div class="image-info">
+            <div class="image-resolution">{{ logo.width }}x{{ logo.height }}</div>
+            <div class="image-rating" *ngIf="logo.vote_count > 0">
+              <mat-icon class="star-icon">star</mat-icon>
+              <span>{{ logo.vote_average | number:'1.1-1' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div class="no-images" *ngIf="!hasImages()">
+  <p>{{ 'movieDetail.noImages' | translate }}</p>
+</div>

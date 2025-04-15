@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MovieResponse, MovieDetails } from './models/movie.model';
+import { MovieResponse, MovieDetails, ImageResponse, KeywordResponse, ReviewResponse } from './models/movie.model';
 import { 
   MovieFilters, 
   WatchProviderResponse, 
@@ -30,7 +30,7 @@ export class ApiService {
 
   getMovieDetail(id: number): Observable<MovieDetails> {
     return this.http.get<MovieDetails>(
-      `${this.baseUrl}/movie/${id}?api_key=${this.apiKey}&language=${this.language}&append_to_response=credits,videos,similar,recommendations,watch/providers`
+      `${this.baseUrl}/movie/${id}?api_key=${this.apiKey}&language=${this.language}&append_to_response=credits,videos,similar,recommendations,images,keywords,reviews,watch/providers,release_dates`
     );
   }
 
@@ -181,6 +181,30 @@ export class ApiService {
   getUpcomingReleases(startDate: string, endDate: string, page: number = 1): Observable<MovieResponse> {
     return this.http.get<MovieResponse>(
       `${this.baseUrl}/discover/movie?api_key=${this.apiKey}&language=${this.language}&primary_release_date.gte=${startDate}&primary_release_date.lte=${endDate}&sort_by=primary_release_date.asc&page=${page}&region=${this.region}`
+    );
+  }
+
+  getMovieImages(movieId: number): Observable<ImageResponse> {
+    return this.http.get<ImageResponse>(
+      `${this.baseUrl}/movie/${movieId}/images?api_key=${this.apiKey}`
+    );
+  }
+
+  getMovieKeywords(movieId: number): Observable<KeywordResponse> {
+    return this.http.get<KeywordResponse>(
+      `${this.baseUrl}/movie/${movieId}/keywords?api_key=${this.apiKey}`
+    );
+  }
+
+  getMovieReviews(movieId: number, page: number = 1): Observable<ReviewResponse> {
+    return this.http.get<ReviewResponse>(
+      `${this.baseUrl}/movie/${movieId}/reviews?api_key=${this.apiKey}&language=${this.language}&page=${page}`
+    );
+  }
+
+  getCollection(collectionId: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/collection/${collectionId}?api_key=${this.apiKey}&language=${this.language}`
     );
   }
 

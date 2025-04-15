@@ -17,7 +17,10 @@
     "topRated": "Mejor valoradas",
     "upcoming": "Próximos estrenos",
     "discover": "Explorar películas",
-    "exploreMovies": "Explorar"
+    "exploreMovies": "Explorar",
+    "readMore": "Leer más",
+    "readLess": "Leer menos",
+    "viewOriginal": "Ver original"
   },
   "home": {
     "welcome": "Bienvenido a CineFinder",
@@ -48,6 +51,20 @@
     "director": "Director",
     "writer": "Guionista",
     "producer": "Productor"
+  },
+  "movieDetail": {
+    "images": "Imágenes",
+    "backdrops": "Fondos",
+    "posters": "Pósters",
+    "logos": "Logos",
+    "noImages": "No hay imágenes disponibles para esta película",
+    "keywords": "Palabras clave",
+    "noKeywords": "No hay palabras clave disponibles para esta película",
+    "reviews": "Reseñas",
+    "noReviews": "No hay reseñas disponibles para esta película",
+    "collection": "Colección",
+    "viewCollection": "Ver colección completa",
+    "partOfCollection": "Parte de la colección"
   },
   "search": {
     "title": "Búsqueda avanzada",
