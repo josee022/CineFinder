@@ -12,7 +12,7 @@ import { MovieFilters } from '../../../core/models/filters.model';
 import { MovieFiltersComponent } from '../movie-filters/movie-filters.component';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
-type CategoryType = 'popular' | 'top_rated' | 'upcoming' | 'now_playing' | 'discover';
+type CategoryType = 'popular' | 'top_rated' | 'top-rated' | 'upcoming' | 'now_playing' | 'now-playing' | 'discover';
 
 @Component({
   selector: 'app-movie-category',
@@ -51,8 +51,10 @@ export class MovieCategoryComponent implements OnInit {
   categoryTitles: Record<CategoryType, string> = {
     popular: 'Películas Populares',
     top_rated: 'Películas Mejor Valoradas',
+    'top-rated': 'Películas Mejor Valoradas',
     upcoming: 'Próximos Estrenos',
     now_playing: 'En Cartelera',
+    'now-playing': 'En Cartelera',
     discover: 'Descubrir Películas'
   };
 
@@ -64,6 +66,15 @@ export class MovieCategoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Primero intentamos obtener el tipo de categoría de los datos de la ruta
+    this.route.data.subscribe(data => {
+      if (data['categoryType']) {
+        this.categoryType = data['categoryType'] as CategoryType;
+        this.loadMovies();
+      }
+    });
+    
+    // También manejamos el caso de que el tipo de categoría venga como parámetro de la URL
     this.route.params.subscribe(params => {
       if (params['category']) {
         this.categoryType = params['category'] as CategoryType;
@@ -96,12 +107,14 @@ export class MovieCategoryComponent implements OnInit {
         apiCall = this.apiService.getPopularMovies(this.currentPage);
         break;
       case 'top_rated':
+      case 'top-rated':
         apiCall = this.apiService.getTopRatedMovies(this.currentPage);
         break;
       case 'upcoming':
         apiCall = this.apiService.getUpcomingMovies(this.currentPage);
         break;
       case 'now_playing':
+      case 'now-playing':
         apiCall = this.apiService.getNowPlayingMovies(this.currentPage);
         break;
       default:
@@ -141,6 +154,9 @@ export class MovieCategoryComponent implements OnInit {
 
   onPageChange(event: PageEvent): void {
     this.currentPage = event.pageIndex + 1;
+    this.loadMovies(); // Cargar películas inmediatamente
+    
+    // Actualizar la URL con el nuevo número de página
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: this.currentPage },

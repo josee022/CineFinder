@@ -213,7 +213,7 @@ export class AdvancedFiltersComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (response) => {
-        this.genres = response.genres;
+        this.genres = response;
         this.isLoadingGenres = false;
       },
       error: (error) => {

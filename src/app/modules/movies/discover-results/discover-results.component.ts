@@ -95,7 +95,7 @@ export class DiscoverResultsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (response) => {
-        this.genres = response.genres;
+        this.genres = response;
       },
       error: (error) => {
         console.error('Error al cargar géneros:', error);
