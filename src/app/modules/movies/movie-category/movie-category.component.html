@@ -5,6 +5,18 @@
       <p class="results-count" *ngIf="!isLoading && !errorMessage">
         Mostrando {{ (currentPage - 1) * pageSize + 1 }}-{{ (currentPage - 1) * pageSize + movies.length }} de {{ totalResults }} películas
       </p>
+      <button mat-raised-button color="primary" class="filter-button" (click)="toggleFilters()">
+        <mat-icon>{{ showFilters ? 'filter_list_off' : 'filter_list' }}</mat-icon>
+        {{ showFilters ? ('filters.hideFilters' | translate) : ('filters.showFilters' | translate) }}
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-wrapper" *ngIf="showFilters">
+      <app-movie-filters 
+        [initialFilters]="currentFilters" 
+        (filtersChanged)="onFiltersChanged($event)">
+      </app-movie-filters>
     </div>
 
     <!-- Loading indicator -->
@@ -48,9 +60,16 @@
               <h3 class="movie-title">{{ movie.title }}</h3>
               <p class="movie-year">{{ movie.release_date | slice:0:4 }}</p>
               <p class="movie-overview">{{ (movie.overview.length > 100) ? (movie.overview | slice:0:100) + '...' : movie.overview }}</p>
-              <button mat-button color="primary" (click)="navigateToMovieDetail(movie.id); $event.stopPropagation()">
-                <mat-icon>info</mat-icon> Ver detalles
-              </button>
+              <div class="movie-footer">
+                <button mat-flat-button color="primary" class="details-button" (click)="navigateToMovieDetail(movie.id); $event.stopPropagation()">
+                  <mat-icon>info</mat-icon> Ver detalles
+                </button>
+                <div class="movie-genres" *ngIf="getMovieGenres(movie.id).length > 0">
+                  <span class="genre-chip" *ngFor="let genre of getMovieGenres(movie.id).slice(0, 2)">
+                    {{ genre }}
+                  </span>
+                </div>
+              </div>
             </div>
           </mat-card>
         }
@@ -63,24 +82,16 @@
         }
       </div>
 
-      <!-- Paginación simplificada -->
+      <!-- Paginación con MatPaginator -->
       @if (totalPages > 1) {
-        <div class="custom-pagination">
-          <button 
-            mat-raised-button 
-            [disabled]="currentPage === 1"
-            (click)="onPageChange(currentPage - 1)"
-            class="pagination-button">
-            <mat-icon>chevron_left</mat-icon> Anterior
-          </button>
-          <span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
-          <button 
-            mat-raised-button 
-            [disabled]="currentPage === totalPages"
-            (click)="onPageChange(currentPage + 1)"
-            class="pagination-button">
-            Siguiente <mat-icon>chevron_right</mat-icon>
-          </button>
+        <div class="pagination-container">
+          <mat-paginator
+            [length]="totalResults"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPage - 1"
+            [hidePageSize]="true"
+            (page)="onPageChange($event)">
+          </mat-paginator>
         </div>
       }
     }

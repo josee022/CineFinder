@@ -1,0 +1,66 @@
+<div class="collection-detail-container">
+  <!-- Loading indicator -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  }
+
+  <!-- Error message -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadCollection()">
+        {{ 'common.tryAgain' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- Collection details -->
+  @if (collection && !isLoading && !errorMessage) {
+    <div class="collection-backdrop" [style.background-image]="'url(' + getBackdropUrl() + ')'">
+      <div class="backdrop-overlay">
+        <div class="container collection-header">
+          <div class="poster-container">
+            <img [src]="getPosterUrl()" alt="{{ collection.name }} poster" class="collection-poster">
+          </div>
+          <div class="collection-info">
+            <h1 class="collection-title">{{ collection.name }}</h1>
+            
+            <p class="collection-overview">{{ collection.overview }}</p>
+            
+            <div class="collection-meta">
+              <span class="movie-count">
+                <mat-icon>movie</mat-icon>
+                {{ collection.parts.length }} {{ 'collection.movies' | translate }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container content-section">
+      <h2 class="section-title">{{ 'collection.allMovies' | translate }}</h2>
+      
+      <div class="movies-grid">
+        @for (movie of collection.parts; track movie.id) {
+          <div class="movie-card" (click)="navigateToMovie(movie.id)">
+            <div class="movie-poster">
+              <img [src]="getMoviePosterUrl(movie.poster_path)" [alt]="movie.title">
+              <div class="movie-rating" *ngIf="movie.vote_average">
+                <span class="rating-value">{{ movie.vote_average | number:'1.1-1' }}</span>
+              </div>
+            </div>
+            <div class="movie-info">
+              <h3 class="movie-title">{{ movie.title }}</h3>
+              <p class="movie-date">{{ formatDate(movie.release_date) }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

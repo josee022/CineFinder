@@ -59,10 +59,10 @@
     </div>
     
     <div class="container content-section">
-      <mat-tab-group>
-        <mat-tab label="Resumen">
+      <mat-tab-group class="custom-tabs">
+        <mat-tab label="{{ 'movieDetail.overview' | translate }}">
           <div class="tab-content">
-            <h2>Resumen</h2>
+            <h2>{{ 'movieDetail.overview' | translate }}</h2>
             <p class="overview">{{ movie.overview }}</p>
             
             <div class="details-grid">
@@ -83,12 +83,34 @@
                 <p>{{ movie.original_language | uppercase }}</p>
               </div>
             </div>
+
+            <!-- Colección -->
+            <div class="collection-info" *ngIf="movie.belongs_to_collection">
+              <h2>{{ 'movieDetail.partOfCollection' | translate }}</h2>
+              <div class="collection-card" [routerLink]="['/collection', movie.belongs_to_collection.id]">
+                <div class="collection-image">
+                  <img 
+                    [src]="movie.belongs_to_collection.backdrop_path ? 'https://image.tmdb.org/t/p/w500' + movie.belongs_to_collection.backdrop_path : 'assets/placeholder.jpg'" 
+                    [alt]="movie.belongs_to_collection.name">
+                </div>
+                <div class="collection-details">
+                  <h3>{{ movie.belongs_to_collection.name }}</h3>
+                  <button mat-button color="primary">
+                    <mat-icon>collections</mat-icon>
+                    {{ 'movieDetail.viewCollection' | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Palabras clave -->
+            <app-movie-keywords [keywords]="movie.keywords"></app-movie-keywords>
           </div>
         </mat-tab>
         
-        <mat-tab label="Reparto">
+        <mat-tab label="{{ 'movieDetail.cast' | translate }}">
           <div class="tab-content">
-            <h2>Reparto</h2>
+            <h2>{{ 'movieDetail.cast' | translate }}</h2>
             <div class="cast-grid">
               @if (movie.credits && movie.credits.cast && movie.credits.cast.length > 0) {
                 @for (actor of movie.credits.cast.slice(0, 10); track actor.id) {
@@ -102,45 +124,67 @@
                   </div>
                 }
               } @else {
-                <p>No hay información del reparto disponible</p>
+                <p>{{ 'movieDetail.noCast' | translate }}</p>
               }
             </div>
           </div>
         </mat-tab>
         
-        <mat-tab label="Dónde Ver">
+        <mat-tab label="{{ 'movieDetail.whereToWatch' | translate }}">
           <div class="tab-content">
-            <h2>Dónde Ver</h2>
+            <h2>{{ 'movieDetail.whereToWatch' | translate }}</h2>
             <app-watch-providers [movieId]="movieId"></app-watch-providers>
           </div>
         </mat-tab>
         
-        <mat-tab label="Vídeos">
+        <mat-tab label="{{ 'movieDetail.videos' | translate }}">
           <div class="tab-content">
-            <h2>Vídeos</h2>
+            <h2>{{ 'movieDetail.videos' | translate }}</h2>
             <div class="videos-grid">
               @if (movie.videos && movie.videos.results && movie.videos.results.length > 0) {
-                @for (video of movie.videos.results.slice(0, 4); track video.id) {
+                @for (video of movie.videos.results; track video.id) {
                   <div class="video-card">
-                    <h3>{{ video.name }}</h3>
-                    <p>{{ video.type }}</p>
-                    <button mat-button color="primary">
-                      <mat-icon>play_circle</mat-icon> Ver
-                    </button>
+                    <div class="video-container">
+                      <iframe 
+                        width="100%" 
+                        height="200" 
+                        [src]="'https://www.youtube.com/embed/' + video.key | safeUrl" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                      </iframe>
+                    </div>
+                    <div class="video-info">
+                      <h3>{{ video.name }}</h3>
+                      <p>{{ video.type }}</p>
+                    </div>
                   </div>
                 }
               } @else {
-                <p>No hay vídeos disponibles</p>
+                <p class="no-content">{{ 'movieDetail.noVideos' | translate }}</p>
               }
             </div>
           </div>
         </mat-tab>
+        
+        <mat-tab label="{{ 'movieDetail.images' | translate }}">
+          <div class="tab-content">
+            <app-movie-images [images]="movie.images" [title]="movie.title"></app-movie-images>
+          </div>
+        </mat-tab>
+        
+        <mat-tab label="{{ 'movieDetail.reviews' | translate }}">
+          <div class="tab-content">
+            <app-movie-reviews [reviews]="movie.reviews" [movieId]="movie.id"></app-movie-reviews>
+          </div>
+        </mat-tab>
+        
+        <mat-tab label="{{ 'movieDetail.recommendations' | translate }}">
+          <div class="tab-content">
+            <app-movie-recommendations [movieId]="movieId"></app-movie-recommendations>
+          </div>
+        </mat-tab>
       </mat-tab-group>
-      
-      <!-- Recomendaciones de películas -->
-      <div class="recommendations-section">
-        <app-movie-recommendations [movieId]="movieId"></app-movie-recommendations>
-      </div>
     </div>
   }
 </div>

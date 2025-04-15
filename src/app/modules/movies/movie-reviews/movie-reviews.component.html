@@ -1,0 +1,57 @@
+<div class="reviews-container" *ngIf="hasReviews()">
+  <h2 class="section-title">{{ 'movieDetail.reviews' | translate }}</h2>
+  
+  <div class="reviews-list">
+    <mat-card class="review-card" *ngFor="let review of reviews?.results">
+      <mat-card-header>
+        <img mat-card-avatar [src]="getAvatarUrl(review.author_details.avatar_path)" [alt]="review.author">
+        <mat-card-title>{{ review.author }}</mat-card-title>
+        <mat-card-subtitle>
+          <div class="review-date">{{ formatDate(review.created_at) }}</div>
+          <div class="review-rating" *ngIf="review.author_details.rating">
+            <mat-icon class="star-icon">star</mat-icon>
+            <span>{{ review.author_details.rating }}/10</span>
+          </div>
+        </mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="review-content" [class.expanded]="isReviewExpanded(review.id)">
+          <p>{{ review.content }}</p>
+        </div>
+        
+        <button 
+          mat-button 
+          *ngIf="review.content.length > 400" 
+          (click)="toggleReview(review.id)"
+          class="expand-button">
+          {{ isReviewExpanded(review.id) ? ('common.readLess' | translate) : ('common.readMore' | translate) }}
+        </button>
+      </mat-card-content>
+      
+      <mat-card-actions>
+        <a mat-button [href]="review.url" target="_blank" color="primary">
+          <mat-icon>launch</mat-icon>
+          {{ 'common.viewOriginal' | translate }}
+        </a>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  
+  <mat-paginator 
+    *ngIf="reviews && reviews.total_pages && reviews.total_pages > 1"
+    [length]="reviews && reviews.total_results || 0"
+    [pageSize]="20"
+    [pageIndex]="currentPage - 1"
+    [hidePageSize]="true"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+  
+  <div class="loading-spinner" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</div>
+
+<div class="no-reviews" *ngIf="!hasReviews()">
+  <p>{{ 'movieDetail.noReviews' | translate }}</p>
+</div>

@@ -32,6 +32,10 @@ export class SearchResultsComponent implements OnInit {
   totalPages: number = 0;
   totalResults: number = 0;
   pageSize: number = 20;
+  
+  // Filtros
+  keywordId: number | null = null;
+  keywordName: string = '';
 
   constructor(
     private apiService: ApiService,
@@ -45,12 +49,17 @@ export class SearchResultsComponent implements OnInit {
     this.route.queryParamMap.subscribe(params => {
       const query = params.get('query');
       const page = Number(params.get('page')) || 1;
+      const withKeywords = params.get('with_keywords');
+      const keywordName = params.get('keyword_name');
       
       if (query) {
         this.searchQuery = query;
         this.currentPage = page;
         this.searchMovies();
-        this.scrollService.scrollToTop();
+      } else if (withKeywords) {
+        this.keywordId = Number(withKeywords);
+        this.keywordName = keywordName || '';
+        this.searchByKeyword();
       } else {
         this.router.navigate(['/home']);
       }
@@ -59,19 +68,42 @@ export class SearchResultsComponent implements OnInit {
 
   searchMovies(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+    this.scrollService.scrollToTop();
     
     this.apiService.searchMovies(this.searchQuery, this.currentPage).subscribe({
-      next: (data) => {
-        this.searchResults = data.results;
-        this.totalPages = data.total_pages;
-        this.totalResults = data.total_results;
+      next: (response) => {
+        this.searchResults = response.results;
+        this.totalPages = response.total_pages;
+        this.totalResults = response.total_results;
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al buscar películas. Por favor, inténtalo de nuevo más tarde.';
-        this.isLoading = false;
         console.error('Error searching movies:', error);
+        this.errorMessage = 'Error al buscar películas. Por favor, inténtalo de nuevo.';
+        this.isLoading = false;
+      }
+    });
+  }
+  
+  searchByKeyword(): void {
+    if (!this.keywordId) return;
+    
+    this.isLoading = true;
+    this.scrollService.scrollToTop();
+    
+    this.apiService.discoverMovies({
+      with_keywords: [this.keywordId]
+    }, this.currentPage).subscribe({
+      next: (response) => {
+        this.searchResults = response.results;
+        this.totalPages = response.total_pages;
+        this.totalResults = response.total_results;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error searching movies by keyword:', error);
+        this.errorMessage = 'Error al buscar películas por palabra clave. Por favor, inténtalo de nuevo.';
+        this.isLoading = false;
       }
     });
   }

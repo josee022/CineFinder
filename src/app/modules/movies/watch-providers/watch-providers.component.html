@@ -31,7 +31,7 @@
               <mat-icon>stream</mat-icon>
               <span>Streaming</span>
             </h3>
-            <div class="providers-grid">
+            <div class="providers-list">
               <div class="provider-item" *ngFor="let provider of country.providers.flatrate">
                 <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
                 <span class="provider-name">{{ provider.provider_name }}</span>
@@ -45,7 +45,7 @@
               <mat-icon>shopping_cart</mat-icon>
               <span>Alquiler</span>
             </h3>
-            <div class="providers-grid">
+            <div class="providers-list">
               <div class="provider-item" *ngFor="let provider of country.providers.rent">
                 <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
                 <span class="provider-name">{{ provider.provider_name }}</span>
@@ -59,7 +59,7 @@
               <mat-icon>shopping_bag</mat-icon>
               <span>Compra</span>
             </h3>
-            <div class="providers-grid">
+            <div class="providers-list">
               <div class="provider-item" *ngFor="let provider of country.providers.buy">
                 <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
                 <span class="provider-name">{{ provider.provider_name }}</span>
@@ -73,7 +73,7 @@
               <mat-icon>card_giftcard</mat-icon>
               <span>Gratis</span>
             </h3>
-            <div class="providers-grid">
+            <div class="providers-list">
               <div class="provider-item" *ngFor="let provider of country.providers.free">
                 <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
                 <span class="provider-name">{{ provider.provider_name }}</span>
@@ -87,7 +87,7 @@
               <mat-icon>campaign</mat-icon>
               <span>Con anuncios</span>
             </h3>
-            <div class="providers-grid">
+            <div class="providers-list">
               <div class="provider-item" *ngFor="let provider of country.providers.ads">
                 <img [src]="getProviderLogoUrl(provider.logo_path)" [alt]="provider.provider_name" [matTooltip]="provider.provider_name">
                 <span class="provider-name">{{ provider.provider_name }}</span>

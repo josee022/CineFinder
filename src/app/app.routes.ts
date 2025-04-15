@@ -35,6 +35,11 @@ export const routes: Routes = [
     title: 'CineFinder - Detalle de Película'
   },
   {
+    path: 'collection/:id',
+    loadComponent: () => import('./modules/movies/collection-detail/collection-detail.component').then(m => m.CollectionDetailComponent),
+    title: 'CineFinder - Colección'
+  },
+  {
     path: 'search',
     loadComponent: () => import('./modules/movies/search-results/search-results.component').then(m => m.SearchResultsComponent),
     title: 'CineFinder - Resultados de Búsqueda'
@@ -58,6 +63,11 @@ export const routes: Routes = [
         title: 'CineFinder - Calendario de Estrenos'
       }
     ]
+  },
+  {
+    path: 'explore/:category',
+    loadComponent: () => import('./modules/movies/movie-category/movie-category.component').then(m => m.MovieCategoryComponent),
+    title: 'CineFinder - Explorar Películas'
   },
   {
     path: '**',

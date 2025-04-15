@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -12,6 +12,11 @@ import { ScrollService } from '../../../core/services/scroll.service';
 import { MovieDetails } from '../../../core/models/movie.model';
 import { MovieRecommendationsComponent } from '../movie-recommendations/movie-recommendations.component';
 import { WatchProvidersComponent } from '../watch-providers/watch-providers.component';
+import { MovieImagesComponent } from '../movie-images/movie-images.component';
+import { MovieKeywordsComponent } from '../movie-keywords/movie-keywords.component';
+import { MovieReviewsComponent } from '../movie-reviews/movie-reviews.component';
+import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import { Subscription, filter } from 'rxjs';
 
 @Component({
@@ -19,6 +24,7 @@ import { Subscription, filter } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     MatIconModule,
     MatButtonModule,
     MatCardModule,
@@ -26,7 +32,12 @@ import { Subscription, filter } from 'rxjs';
     MatTabsModule,
     MatProgressSpinnerModule,
     MovieRecommendationsComponent,
-    WatchProvidersComponent
+    WatchProvidersComponent,
+    MovieImagesComponent,
+    MovieKeywordsComponent,
+    MovieReviewsComponent,
+    SafeUrlPipe,
+    TranslatePipe
   ],
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.scss']

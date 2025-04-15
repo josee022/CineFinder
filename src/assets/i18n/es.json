@@ -17,7 +17,10 @@
     "topRated": "Mejor valoradas",
     "upcoming": "Próximos estrenos",
     "discover": "Explorar películas",
-    "exploreMovies": "Explorar"
+    "exploreMovies": "Explorar",
+    "readMore": "Leer más",
+    "readLess": "Leer menos",
+    "viewOriginal": "Ver original"
   },
   "home": {
     "welcome": "Bienvenido a CineFinder",
@@ -48,6 +51,35 @@
     "director": "Director",
     "writer": "Guionista",
     "producer": "Productor"
+  },
+  "movieDetail": {
+    "images": "Imágenes",
+    "backdrops": "Fondos",
+    "posters": "Pósters",
+    "logos": "Logos",
+    "noImages": "No hay imágenes disponibles para esta película",
+    "keywords": "Palabras clave",
+    "noKeywords": "No hay palabras clave disponibles para esta película",
+    "reviews": "Reseñas",
+    "noReviews": "No hay reseñas disponibles para esta película",
+    "collection": "Colección",
+    "viewCollection": "Ver colección completa",
+    "partOfCollection": "Parte de la colección",
+    "overview": "Resumen",
+    "cast": "Reparto",
+    "noCast": "No hay información del reparto disponible",
+    "whereToWatch": "Dónde Ver",
+    "videos": "Vídeos",
+    "noVideos": "No hay vídeos disponibles para esta película",
+    "recommendations": "Recomendaciones",
+    "noRecommendations": "No hay recomendaciones disponibles para esta película"
+  },
+  "collection": {
+    "movies": "películas",
+    "allMovies": "Todas las películas de la colección",
+    "releaseDate": "Fecha de estreno",
+    "overview": "Resumen",
+    "noOverview": "No hay descripción disponible para esta colección"
   },
   "search": {
     "title": "Búsqueda avanzada",
@@ -81,6 +113,30 @@
     "directors": "Directores",
     "searchActors": "Buscar actores",
     "searchDirectors": "Buscar directores"
+  },
+  "filters": {
+    "title": "Filtros",
+    "showFilters": "Mostrar filtros",
+    "hideFilters": "Ocultar filtros",
+    "sortBy": "Ordenar por",
+    "popularityDesc": "Popularidad (mayor a menor)",
+    "popularityAsc": "Popularidad (menor a mayor)",
+    "ratingDesc": "Valoración (mayor a menor)",
+    "ratingAsc": "Valoración (menor a mayor)",
+    "releaseDateDesc": "Fecha de estreno (reciente a antiguo)",
+    "releaseDateAsc": "Fecha de estreno (antiguo a reciente)",
+    "revenueDesc": "Ingresos (mayor a menor)",
+    "revenueAsc": "Ingresos (menor a mayor)",
+    "year": "Año",
+    "selectYear": "Seleccionar año",
+    "allYears": "Todos los años",
+    "genres": "Géneros",
+    "selectGenres": "Seleccionar géneros",
+    "loadingGenres": "Cargando géneros...",
+    "minRating": "Valoración mínima",
+    "includeAdult": "Incluir contenido para adultos",
+    "reset": "Restablecer filtros",
+    "apply": "Aplicar filtros"
   },
   "calendar": {
     "title": "Calendario de estrenos",
