@@ -1,59 +1,104 @@
 <footer class="footer">
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-section about">
-        <div class="logo">
-          <h2>CineFinder</h2>
+  <!-- Wave animation at the top of the footer -->
+  <div class="footer-wave">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+    </svg>
+  </div>
+
+  <div class="footer-main">
+    <div class="container">
+      <!-- Main footer content with gradient background -->
+      <div class="footer-content">
+        <!-- About section with animated logo -->
+        <div class="footer-section about">
+          <div class="logo">
+            <div class="logo-text">CineFinder</div>
+            <div class="logo-tagline">Your Ultimate Movie Companion</div>
+          </div>
+          <p class="about-text">
+            Descubre el fascinante mundo del cine con CineFinder. Explora las últimas películas, obtén recomendaciones personalizadas y sumérgete en una experiencia cinematográfica única.
+          </p>
+          <div class="stats-container">
+            <div class="stat-item">
+              <div class="stat-number">10K+</div>
+              <div class="stat-label">Películas</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">500+</div>
+              <div class="stat-label">Géneros</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">1M+</div>
+              <div class="stat-label">Usuarios</div>
+            </div>
+          </div>
         </div>
-        <p class="about-text">
-          Discover the latest movies, get recommendations, and explore your favorite films with CineFinder - your ultimate movie companion.
-        </p>
-        <div class="social-links">
-          @for (link of socialLinks; track $index) {
-            <a [href]="link.url" target="_blank" class="social-link">
-              <mat-icon [fontIcon]="link.icon"></mat-icon>
-            </a>
-          }
+        
+        <!-- Explore section with animated links -->
+        <div class="footer-section explore">
+          <h3>Explora</h3>
+          <div class="explore-links">
+            <div class="explore-column">
+              @for (link of exploreLinks.slice(0, Math.ceil(exploreLinks.length/2)); track $index) {
+                <a [routerLink]="link.path" class="explore-link">
+                  <mat-icon>{{ link.icon }}</mat-icon>
+                  <span>{{ link.label }}</span>
+                </a>
+              }
+            </div>
+            <div class="explore-column">
+              @for (link of exploreLinks.slice(Math.ceil(exploreLinks.length/2)); track $index) {
+                <a [routerLink]="link.path" class="explore-link">
+                  <mat-icon>{{ link.icon }}</mat-icon>
+                  <span>{{ link.label }}</span>
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+        
+        <!-- Connect section with recommendations and social media -->
+        <div class="footer-section connect">
+          <h3>Conéctate con nosotros</h3>
+          <div class="recommendations">
+            <p>Descubre películas personalizadas</p>
+            <div class="recommendation-action">
+              <a routerLink="/movies/popular" class="recommendation-button">
+                <mat-icon>local_movies</mat-icon>
+                <span>Explorar recomendaciones</span>
+              </a>
+            </div>
+          </div>
+          <div class="social-links">
+            @for (link of socialLinks; track $index) {
+              <a [href]="link.url" target="_blank" class="social-link" [attr.aria-label]="link.name">
+                <mat-icon>{{ link.icon }}</mat-icon>
+              </a>
+            }
+          </div>
         </div>
       </div>
       
-      <div class="footer-section links">
-        <h3>Quick Links</h3>
-        <ul>
-          @for (link of footerLinks; track $index) {
-            <li><a [routerLink]="link.path">{{ link.label }}</a></li>
-          }
-        </ul>
-      </div>
-      
-      <div class="footer-section contact">
-        <h3>Contact Us</h3>
-        <div class="contact-info">
-          <div class="contact-item">
-            <mat-icon>email</mat-icon>
-            <span>info&#64;cinefinder.com</span>
-          </div>
-          <div class="contact-item">
-            <mat-icon>phone</mat-icon>
-            <span>+1 (555) 123-4567</span>
-          </div>
-          <div class="contact-item">
-            <mat-icon>location_on</mat-icon>
-            <span>123 Movie Street, Hollywood, CA</span>
-          </div>
+      <!-- Footer bottom with TMDB attribution and copyright -->
+      <div class="footer-bottom">
+        <div class="footer-nav">
+          <a href="#" class="footer-nav-link">Términos y Condiciones</a>
+          <a href="#" class="footer-nav-link">Política de Privacidad</a>
+          <a href="#" class="footer-nav-link">Contacto</a>
+          <a href="#" class="footer-nav-link">Sobre Nosotros</a>
         </div>
-      </div>
-    </div>
-    
-    <div class="footer-bottom">
-      <div class="tmdb-attribution">
-        <p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
-        <a href="https://www.themoviedb.org/" target="_blank">
-          <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="TMDB Logo" class="tmdb-logo">
-        </a>
-      </div>
-      <div class="copyright">
-        <p>&copy; {{ currentYear }} CineFinder. All rights reserved.</p>
+        
+        <div class="tmdb-attribution">
+          <p>Este producto utiliza la API de TMDB pero no está respaldado ni certificado por TMDB.</p>
+          <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">
+            <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="TMDB Logo" class="tmdb-logo">
+          </a>
+        </div>
+        
+        <div class="copyright">
+          <p>&copy; {{ currentYear }} CineFinder | Todos los derechos reservados</p>
+        </div>
       </div>
     </div>
   </div>
