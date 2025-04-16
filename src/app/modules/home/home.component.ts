@@ -66,9 +66,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: (results) => {
-        this.popularMovies = results.popular.results.slice(0, 6);
-        this.topRatedMovies = results.topRated.results.slice(0, 6);
-        this.upcomingMovies = results.upcoming.results.slice(0, 6);
+        this.popularMovies = results.popular.results.slice(0, 8);
+        this.topRatedMovies = results.topRated.results.slice(0, 8);
+        this.upcomingMovies = results.upcoming.results.slice(0, 8);
         this.isLoading = false;
       },
       error: (error) => {

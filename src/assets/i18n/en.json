@@ -93,7 +93,8 @@
     "runtime": "Runtime",
     "language": "Language",
     "searchActors": "Search actors",
-    "searchDirectors": "Search directors"
+    "searchDirectors": "Search directors",
+    "searchPlaceholder": "Search"
   },
   "filters": {
     "title": "Filters",

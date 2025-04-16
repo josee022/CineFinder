@@ -18,19 +18,22 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class FooterComponent {
   currentYear = new Date().getFullYear();
+  Math = Math; // Exponer Math para usarlo en la plantilla
   
   socialLinks = [
-    { icon: 'facebook', url: 'https://facebook.com' },
-    { icon: 'twitter', url: 'https://twitter.com' },
-    { icon: 'instagram', url: 'https://instagram.com' },
-    { icon: 'youtube', url: 'https://youtube.com' }
+    { icon: 'public', url: 'https://facebook.com', name: 'Facebook' },
+    { icon: 'share', url: 'https://twitter.com', name: 'Twitter' },
+    { icon: 'photo_camera', url: 'https://instagram.com', name: 'Instagram' },
+    { icon: 'videocam', url: 'https://youtube.com', name: 'YouTube' },
+    { icon: 'send', url: 'https://telegram.org', name: 'Telegram' }
   ];
   
-  footerLinks = [
-    { label: 'Home', path: '/home' },
-    { label: 'Movies', path: '/movies' },
-    { label: 'Popular', path: '/popular' },
-    { label: 'Top Rated', path: '/top-rated' },
-    { label: 'Upcoming', path: '/upcoming' }
+  exploreLinks = [
+    { icon: 'home', label: 'Inicio', path: '/home' },
+    { icon: 'movie', label: 'Películas', path: '/movies/popular' },
+    { icon: 'trending_up', label: 'Populares', path: '/movies/popular' },
+    { icon: 'star', label: 'Mejor valoradas', path: '/movies/top-rated' },
+    { icon: 'upcoming', label: 'Próximos estrenos', path: '/movies/upcoming' },
+    { icon: 'search', label: 'Buscar', path: '/search' }
   ];
 }

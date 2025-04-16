@@ -2,22 +2,24 @@
   max-width: 1200px;
   margin: 0 auto;
   padding-bottom: 60px;
+  position: relative;
 }
+
+
 
 /* Hero Section */
 .hero-section {
   position: relative;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('/assets/images/hero-bg.jpg') no-repeat center center;
-  background-size: cover;
-  height: 500px;
+  height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 60px;
-  border-radius: 0 0 20px 20px;
+  border-radius: 0 0 30px 30px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  background: url('/assets/images/cineFinder.png') no-repeat center center;
+  background-size: cover;
   
   &::before {
     content: '';
@@ -31,50 +33,141 @@
   }
 }
 
-.hero-content {
-  text-align: center;
-  max-width: 800px;
-  padding: 0 20px;
-  z-index: 2;
-  animation: fadeIn 1s ease-in-out;
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+  z-index: 1;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+.hero-content {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-start;
+  animation: fadeInUp 1.2s ease-out;
+}
+
+.hero-text-container {
+  max-width: 600px;
+  text-align: left;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-title {
-  font-size: 48px;
+  font-size: 52px;
   font-weight: 800;
   margin-bottom: 20px;
-  background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  color: white;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    border-radius: 2px;
+  }
 }
 
 .hero-description {
   font-size: 18px;
-  color: #fff;
-  margin-bottom: 30px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 30px 0;
   line-height: 1.6;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: 400;
+  max-width: 550px;
 }
 
-.hero-actions {
+.hero-stats {
   display: flex;
-  gap: 15px;
-  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
   
-  button {
-    min-width: 180px;
-    padding: 8px 16px;
-    height: auto;
+  .stat-item {
+    display: flex;
+    flex-direction: column;
     
-    mat-icon {
-      margin-right: 8px;
+    .stat-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 500px;
+  }
+  
+  .hero-content {
+    justify-content: center;
+  }
+  
+  .hero-text-container {
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 42px;
+    
+    &::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+  
+  .hero-stats {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    height: 450px;
+  }
+  
+  .hero-title {
+    font-size: 36px;
+  }
+  
+  .hero-description {
+    font-size: 16px;
+  }
+  
+  .hero-stats {
+    gap: 20px;
+    
+    .stat-item .stat-number {
+      font-size: 28px;
+    }
+    
+    .stat-item .stat-label {
+      font-size: 14px;
     }
   }
 }
@@ -178,8 +271,28 @@
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 25px;
+  
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 12px;
+  }
 }
 
 .movie-card {

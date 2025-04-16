@@ -1,9 +1,9 @@
 .filters-container {
   padding: 1.5rem;
-  background-color: rgba(30, 30, 30, 0.85);
+  background-color: rgba(30, 30, 30, 0.6); /* Reducida la opacidad para mostrar mejor el fondo */
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px); /* Reducido el desenfoque para que se vea mejor el fondo */
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   

@@ -1,7 +1,7 @@
 .category-container {
   min-height: calc(100vh - 64px);
   padding: 30px 0;
-  background-color: var(--dark-bg);
+  background-color: transparent; /* Cambiado a transparente para mostrar el fondo */
   color: var(--light-text);
 }
 
@@ -17,6 +17,31 @@
     margin: 0;
     margin-right: auto;
     color: white;
+  }
+  
+  .movie-year {
+    font-size: 14px;
+    color: var(--muted-text);
+    margin-bottom: 8px;
+  }
+  
+  .movie-release-date {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--primary-light);
+    margin-bottom: 8px;
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    
+    .calendar-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+      margin-right: 4px;
+    }
   }
   
   .results-count {
@@ -183,23 +208,28 @@
 /* Estilos para la cuadrícula de películas */
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 25px;
   margin-bottom: 40px;
   animation: fadeInUp 0.6s ease-out;
   
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  
   @media (max-width: 992px) {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
   }
   
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
   
   @media (max-width: 480px) {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(1, 1fr);
     gap: 12px;
   }
 }
