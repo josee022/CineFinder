@@ -2,10 +2,15 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
 }
+
+/* Los estilos de fondo ahora se manejan globalmente en styles.scss */
 
 .main-content {
   flex: 1;
-  background-color: #141414;
+  background-color: transparent; /* Eliminado el fondo para mostrar la imagen */
   color: white;
+  position: relative;
+  z-index: 1;
 }
