@@ -53,8 +53,28 @@ export class ApiService {
   }
 
   getUpcomingMovies(page: number = 1): Observable<MovieResponse> {
+    // Obtener la fecha actual
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    
+    // Usar el endpoint discover con filtro de fecha para asegurar que solo muestre películas futuras
     return this.http.get<MovieResponse>(
-      `${this.baseUrl}/movie/upcoming?api_key=${this.apiKey}&language=${this.language}&page=${page}&region=${this.region}`
+      `${this.baseUrl}/discover/movie?api_key=${this.apiKey}&language=${this.language}&page=${page}&region=${this.region}&sort_by=release_date.asc&release_date.gte=${formattedDate}&with_release_type=3|2`
+    ).pipe(
+      map(response => {
+        // Filtrar adicionalmente para asegurarnos de que solo incluya películas con fecha de estreno futura
+        const filteredResults = response.results.filter(movie => {
+          if (!movie.release_date) return false;
+          const releaseDate = new Date(movie.release_date);
+          return releaseDate > today;
+        });
+        
+        // Devolver la respuesta con los resultados filtrados
+        return {
+          ...response,
+          results: filteredResults
+        };
+      })
     );
   }
   

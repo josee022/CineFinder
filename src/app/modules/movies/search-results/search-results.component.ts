@@ -109,14 +109,35 @@ export class SearchResultsComponent implements OnInit {
   }
 
   onPageChange(pageNumber: number): void {
+    // Preparar los parámetros de consulta según el tipo de búsqueda
+    let queryParams: any = { page: pageNumber };
+    
+    if (this.searchQuery) {
+      // Búsqueda normal por texto
+      queryParams.query = this.searchQuery;
+    } else if (this.keywordId) {
+      // Búsqueda por palabra clave
+      queryParams.with_keywords = this.keywordId;
+      if (this.keywordName) {
+        queryParams.keyword_name = this.keywordName;
+      }
+    }
+    
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { 
-        query: this.searchQuery,
-        page: pageNumber 
-      },
+      queryParams: queryParams,
       queryParamsHandling: 'merge'
     }).then(() => {
+      // Actualizar la página actual y volver a cargar los resultados
+      this.currentPage = pageNumber;
+      
+      // Cargar los resultados según el tipo de búsqueda
+      if (this.searchQuery) {
+        this.searchMovies();
+      } else if (this.keywordId) {
+        this.searchByKeyword();
+      }
+      
       this.scrollService.scrollToTop();
     });
   }

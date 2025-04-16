@@ -58,7 +58,12 @@
             </div>
             <div class="movie-info">
               <h3 class="movie-title">{{ movie.title }}</h3>
-              <p class="movie-year">{{ movie.release_date | slice:0:4 }}</p>
+              <!-- Mostrar fecha completa para próximos estrenos, solo año para otras categorías -->
+              <p class="movie-year" *ngIf="categoryType !== 'upcoming'">{{ movie.release_date | slice:0:4 }}</p>
+              <p class="movie-release-date" *ngIf="categoryType === 'upcoming' && movie.release_date">
+                <mat-icon class="calendar-icon">calendar_today</mat-icon>
+                Estreno: {{ movie.release_date | date:'dd/MM/yyyy' }}
+              </p>
               <p class="movie-overview">{{ (movie.overview.length > 100) ? (movie.overview | slice:0:100) + '...' : movie.overview }}</p>
               <div class="movie-footer">
                 <button mat-flat-button color="primary" class="details-button" (click)="navigateToMovieDetail(movie.id); $event.stopPropagation()">
