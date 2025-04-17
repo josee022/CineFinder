@@ -25,7 +25,7 @@
   overflow: hidden;
   line-height: 0;
   transform: rotate(180deg);
-  
+
   svg {
     position: relative;
     display: block;
@@ -33,7 +33,7 @@
     height: 70px;
     transform: rotateY(180deg);
   }
-  
+
   .shape-fill {
     fill: var(--footer-wave-color);
   }
@@ -47,7 +47,7 @@
   position: relative;
   z-index: 1;
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
-  
+
   /* Efecto de partículas en el fondo */
   &::before {
     content: '';
@@ -73,11 +73,11 @@
   grid-template-columns: 1.5fr 1fr 1fr;
   gap: 50px;
   margin-bottom: 60px;
-  
+
   @media (max-width: 992px) {
     grid-template-columns: 1fr 1fr;
   }
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -98,7 +98,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: 0.5px;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -116,7 +116,7 @@
 .about {
   .logo {
     margin-bottom: 1.5rem;
-    
+
     .logo-text {
       font-size: 2.2rem;
       font-weight: 800;
@@ -128,7 +128,7 @@
       letter-spacing: 1px;
       animation: shimmer 2s infinite alternate;
     }
-    
+
     .logo-tagline {
       font-size: 0.9rem;
       color: var(--footer-muted);
@@ -136,7 +136,7 @@
       margin-top: -5px;
     }
   }
-  
+
   .about-text {
     color: var(--footer-muted);
     line-height: 1.7;
@@ -144,13 +144,13 @@
     font-size: 0.95rem;
     max-width: 90%;
   }
-  
+
   /* Estadísticas con efecto de contador */
   .stats-container {
     display: flex;
     gap: 2rem;
     margin-top: 1.5rem;
-    
+
     .stat-item {
       .stat-number {
         font-size: 1.8rem;
@@ -158,7 +158,7 @@
         color: var(--primary-color);
         margin-bottom: 0.3rem;
       }
-      
+
       .stat-label {
         font-size: 0.85rem;
         color: var(--footer-muted);
@@ -174,11 +174,11 @@
   .explore-links {
     display: flex;
     gap: 2rem;
-    
+
     .explore-column {
       flex: 1;
     }
-    
+
     .explore-link {
       display: flex;
       align-items: center;
@@ -189,7 +189,7 @@
       padding: 0.5rem 0;
       transition: all 0.3s ease;
       position: relative;
-      
+
       &::before {
         content: '';
         position: absolute;
@@ -200,26 +200,26 @@
         background: linear-gradient(90deg, var(--primary-color), transparent);
         transition: width 0.3s ease;
       }
-      
+
       &:hover {
         color: #ffffff;
         transform: translateX(5px);
-        
+
         &::before {
           width: 100%;
         }
-        
+
         mat-icon {
           color: var(--primary-color);
           transform: scale(1.2);
         }
       }
-      
+
       mat-icon {
         font-size: 1.2rem;
         transition: all 0.3s ease;
       }
-      
+
       span {
         font-size: 0.95rem;
       }
@@ -231,17 +231,17 @@
 .connect {
   .recommendations {
     margin-bottom: 2rem;
-    
+
     p {
       color: var(--footer-muted);
       font-size: 0.95rem;
       margin-bottom: 1rem;
       line-height: 1.6;
     }
-    
+
     .recommendation-action {
       margin-top: 1rem;
-      
+
       .recommendation-button {
         display: inline-flex;
         align-items: center;
@@ -255,11 +255,11 @@
         text-decoration: none;
         cursor: pointer;
         transition: all 0.3s ease;
-        
+
         mat-icon {
           font-size: 1.2rem;
         }
-        
+
         &:hover {
           filter: brightness(1.1);
           transform: translateY(-2px);
@@ -268,13 +268,13 @@
       }
     }
   }
-  
+
   /* Enlaces sociales con efectos de hover */
   .social-links {
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
-    
+
     .social-link {
       display: flex;
       align-items: center;
@@ -287,7 +287,7 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-      
+
       &::before {
         content: '';
         position: absolute;
@@ -300,20 +300,20 @@
         transition: opacity 0.3s ease;
         z-index: -1;
       }
-      
+
       &:hover {
         transform: translateY(-5px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        
+
         &::before {
           opacity: 1;
         }
-        
+
         mat-icon {
           transform: scale(1.2);
         }
       }
-      
+
       mat-icon {
         font-size: 1.2rem;
         height: 1.2rem;
@@ -333,7 +333,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  
+
   /* Enlaces de navegación del footer */
   .footer-nav {
     display: flex;
@@ -341,20 +341,20 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-bottom: 1rem;
-    
+
     @media (max-width: 768px) {
       gap: 1rem;
       flex-direction: column;
       align-items: center;
     }
-    
+
     .footer-nav-link {
       color: var(--footer-muted);
       text-decoration: none;
       font-size: 0.9rem;
       transition: all 0.3s ease;
       position: relative;
-      
+
       &::after {
         content: '';
         position: absolute;
@@ -365,17 +365,17 @@
         background: linear-gradient(90deg, var(--primary-color), transparent);
         transition: width 0.3s ease;
       }
-      
+
       &:hover {
         color: #ffffff;
-        
+
         &::after {
           width: 100%;
         }
       }
     }
   }
-  
+
   /* Atribución TMDB */
   .tmdb-attribution {
     display: flex;
@@ -383,24 +383,24 @@
     align-items: center;
     gap: 0.8rem;
     margin: 1rem 0;
-    
+
     p {
       color: var(--footer-muted);
       font-size: 0.8rem;
       max-width: 80%;
       text-align: center;
     }
-    
+
     .tmdb-logo {
       height: 20px;
       transition: transform 0.3s ease;
-      
+
       &:hover {
         transform: scale(1.05);
       }
     }
   }
-  
+
   /* Copyright */
   .copyright {
     p {
@@ -426,20 +426,20 @@
   .footer-wave svg {
     height: 40px;
   }
-  
+
   .footer-main {
     padding: 60px 0 30px;
   }
-  
+
   .about .logo .logo-text {
     font-size: 1.8rem;
   }
-  
+
   .stats-container {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .explore .explore-links {
     flex-direction: column;
     gap: 0;

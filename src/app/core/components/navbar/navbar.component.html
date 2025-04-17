@@ -12,7 +12,8 @@
         @for (item of mainNavItems; track item.path) {
           <a mat-button 
              [routerLink]="item.path" 
-             routerLinkActive="active-link">
+             routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{exact: item.path === '/home' || item.path === '/'}">
             <mat-icon>{{ item.icon }}</mat-icon>
             <span>{{ item.label | translate }}</span>
           </a>
