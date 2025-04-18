@@ -129,8 +129,9 @@
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  color: var(--primary-color);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
+  border-left: 3px solid var(--primary-color);
+  padding-left: 10px;
   padding-bottom: 0.5rem;
 }
 
@@ -143,14 +144,16 @@
 .movie-card {
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  background-color: white;
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border-color: rgba(var(--primary-color-rgb), 0.5);
   }
   
   .movie-poster {
@@ -178,6 +181,7 @@
   
   .movie-info {
     padding: 1rem;
+    background-color: white;
     
     .movie-title {
       font-size: 1rem;
@@ -186,11 +190,12 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: #222;
     }
     
     .movie-date {
       font-size: 0.9rem;
-      color: #666;
+      color: #555;
       margin: 0;
     }
   }

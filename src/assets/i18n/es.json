@@ -134,9 +134,11 @@
     "selectGenres": "Seleccionar géneros",
     "loadingGenres": "Cargando géneros...",
     "minRating": "Valoración mínima",
+    "contentSettings": "Configuración de contenido",
     "includeAdult": "Incluir contenido para adultos",
     "reset": "Restablecer filtros",
-    "apply": "Aplicar filtros"
+    "apply": "Aplicar filtros",
+    "tip": "Consejo: Combina varios filtros para encontrar exactamente lo que buscas"
   },
   "calendar": {
     "title": "Calendario de estrenos",

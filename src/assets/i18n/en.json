@@ -116,9 +116,11 @@
     "selectGenres": "Select genres",
     "loadingGenres": "Loading genres...",
     "minRating": "Minimum rating",
+    "contentSettings": "Content settings",
     "includeAdult": "Include adult content",
     "reset": "Reset filters",
-    "apply": "Apply filters"
+    "apply": "Apply filters",
+    "tip": "Tip: Combine multiple filters to find exactly what you're looking for"
   },
   "calendar": {
     "title": "Release Calendar",
