@@ -1,0 +1,97 @@
+<div class="filters-container">
+  <div class="filters-header">
+    <h2 class="filters-title">{{ 'filters.title' | translate }}</h2>
+  </div>
+  
+  <form [formGroup]="filtersForm" class="filters-form">
+    <div class="filters-grid">
+      <!-- Ordenar por -->
+      <div class="filter-section">
+        <h3 class="section-title">{{ 'filters.sortBy' | translate }}</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'filters.sortBy' | translate }}</mat-label>
+          <mat-icon matPrefix>sort</mat-icon>
+          <mat-select formControlName="sortBy">
+            @for (option of sortOptions; track option.value) {
+              <mat-option [value]="option.value">{{ option.label | translate }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <!-- Año -->
+      <div class="filter-section">
+        <h3 class="section-title">{{ 'filters.year' | translate }}</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'filters.selectYear' | translate }}</mat-label>
+          <mat-icon matPrefix>date_range</mat-icon>
+          <mat-select formControlName="year">
+            <mat-option [value]="null">{{ 'filters.allYears' | translate }}</mat-option>
+            @for (year of years; track year) {
+              <mat-option [value]="year">{{ year }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    
+    <div class="filters-grid">
+      <!-- Géneros -->
+      <div class="filter-section">
+        <h3 class="section-title">{{ 'filters.genres' | translate }}</h3>
+        @if (isLoading) {
+          <div class="loading-genres">
+            <div class="spinner"></div>
+            <p>{{ 'filters.loadingGenres' | translate }}</p>
+          </div>
+        } @else {
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'filters.selectGenres' | translate }}</mat-label>
+            <mat-icon matPrefix>tv</mat-icon>
+            <mat-select formControlName="genres" multiple [compareWith]="compareGenres">
+              @for (genre of genres; track genre.id) {
+                <mat-option [value]="genre.id">{{ genre.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+      </div>
+      
+      <!-- Valoración mínima -->
+      <div class="filter-section rating-section">
+        <h3 class="section-title">{{ 'filters.minRating' | translate }}</h3>
+        <div class="rating-slider">
+          <mat-slider min="0" max="10" step="0.5" discrete class="full-width">
+            <input matSliderThumb formControlName="voteAverageGte">
+          </mat-slider>
+          <div class="rating-value">{{ filtersForm.get('voteAverageGte')?.value || 0 }}</div>
+        </div>
+        <div class="slider-labels">
+          <span>0</span>
+          <span>10</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Incluir contenido para adultos -->
+    <div class="filter-section adult-content-section">
+      <mat-checkbox formControlName="includeAdult" color="primary" class="adult-checkbox">
+        <div class="checkbox-content">
+          <mat-icon>warning</mat-icon>
+          <span>{{ 'filters.includeAdult' | translate }}</span>
+        </div>
+      </mat-checkbox>
+    </div>
+    
+    <div class="filter-actions">
+      <button mat-stroked-button color="warn" (click)="resetFilters()">
+        <mat-icon>refresh</mat-icon>
+        {{ 'filters.reset' | translate }}
+      </button>
+      <button mat-raised-button color="primary" type="button" (click)="applyFilters()">
+        <mat-icon>filter_list</mat-icon>
+        {{ 'filters.apply' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

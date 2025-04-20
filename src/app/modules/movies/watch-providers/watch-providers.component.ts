@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 
 import { ApiService } from '../../../core/api.service';
 import { CountryProviders, Provider } from '../../../core/models/watch-provider.model';
+import { WatchProvidersListResponse } from '../../../core/models/filters.model';
 
 @Component({
   selector: 'app-watch-providers',
@@ -71,13 +72,13 @@ export class WatchProvidersComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     
-    this.apiService.getWatchProviders(this.movieId).subscribe({
+    this.apiService.getMovieWatchProviders(this.movieId).subscribe({
       next: (data) => {
-        // Usar any para evitar problemas de tipo, ya que la estructura exacta puede variar
-        this.processWatchProviders(data.results as any);
+        // data.results es un objeto con códigos de país como claves
+        this.processWatchProviders(data.results);
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         this.errorMessage = 'No se pudieron cargar los proveedores de streaming.';
         this.isLoading = false;
         console.error('Error cargando proveedores:', error);

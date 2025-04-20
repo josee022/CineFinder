@@ -1,0 +1,74 @@
+<div class="people-list-container">
+  <div class="container">
+    <div class="section-header">
+      <h1 class="section-title">Actores Populares</h1>
+      <div class="actions">
+        <button mat-raised-button color="primary" [routerLink]="['/people/search']">
+          <mat-icon>search</mat-icon>
+          Buscar Actores
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading indicator -->
+    @if (isLoading) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+      </div>
+    }
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <div class="error-container">
+        <mat-icon>error</mat-icon>
+        <p>{{ errorMessage }}</p>
+        <button mat-raised-button color="primary" (click)="loadPopularPeople()">
+          Intentar de nuevo
+        </button>
+      </div>
+    }
+
+    <!-- People grid -->
+    @if (!isLoading && !errorMessage && people.length > 0) {
+      <div class="people-grid">
+        @for (person of people; track person.id) {
+          <div class="person-card" (click)="navigateToPerson(person.id)">
+            <div class="person-image">
+              <img [src]="getProfileUrl(person.profile_path)" [alt]="person.name">
+            </div>
+            <div class="person-info">
+              <h3 class="person-name">{{ person.name }}</h3>
+              <p class="person-department">{{ person.known_for_department }}</p>
+              @if (getKnownFor(person)) {
+                <div class="person-known-for">
+                  <p class="known-for-title">Conocido por</p>
+                  <p class="known-for-movies">{{ getKnownFor(person) }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- No results message -->
+    @if (!isLoading && !errorMessage && people.length === 0) {
+      <div class="no-results">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+        <p>No se encontraron resultados</p>
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (!isLoading && !errorMessage && totalResults > 0) {
+      <mat-paginator 
+        [length]="totalResults"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPage - 1"
+        [hidePageSize]="true"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    }
+  </div>
+</div>

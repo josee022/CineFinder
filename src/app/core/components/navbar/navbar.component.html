@@ -36,6 +36,40 @@
           }
         </mat-menu>
         
+        <!-- Menú desplegable de series de TV -->
+        <button mat-button [matMenuTriggerFor]="tvMenu" class="dropdown-button">
+          <mat-icon>tv</mat-icon>
+          <span>{{ 'common.series' | translate }}</span>
+          <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #tvMenu="matMenu" class="dropdown-menu">
+          @for (item of tvCategories; track item.path) {
+            <a mat-menu-item 
+               [routerLink]="item.path" 
+               routerLinkActive="active-link">
+              <mat-icon>{{ item.icon }}</mat-icon>
+              <span>{{ item.label | translate }}</span>
+            </a>
+          }
+        </mat-menu>
+        
+        <!-- Menú desplegable de personas -->
+        <button mat-button [matMenuTriggerFor]="peopleMenu" class="dropdown-button">
+          <mat-icon>people</mat-icon>
+          <span>{{ 'common.people' | translate }}</span>
+          <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #peopleMenu="matMenu" class="dropdown-menu">
+          @for (item of peopleCategories; track item.path) {
+            <a mat-menu-item 
+               [routerLink]="item.path" 
+               routerLinkActive="active-link">
+              <mat-icon>{{ item.icon }}</mat-icon>
+              <span>{{ item.label | translate }}</span>
+            </a>
+          }
+        </mat-menu>
+        
         <!-- Menú desplegable de exploración (oculto temporalmente) -->
         <!-- 
         <button mat-button [matMenuTriggerFor]="exploreMenu" class="dropdown-button">
@@ -109,6 +143,42 @@
           <span>{{ 'common.movies' | translate }}</span>
         </div>
         @for (item of movieCategories; track item.path) {
+          <a mat-button 
+             [routerLink]="item.path" 
+             routerLinkActive="active-link"
+             (click)="toggleMobileMenu()"
+             class="mobile-subcategory">
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label | translate }}</span>
+          </a>
+        }
+      </div>
+      
+      <!-- Categoría de series de TV en móvil -->
+      <div class="mobile-category">
+        <div class="mobile-category-header">
+          <mat-icon>tv</mat-icon>
+          <span>{{ 'common.series' | translate }}</span>
+        </div>
+        @for (item of tvCategories; track item.path) {
+          <a mat-button 
+             [routerLink]="item.path" 
+             routerLinkActive="active-link"
+             (click)="toggleMobileMenu()"
+             class="mobile-subcategory">
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label | translate }}</span>
+          </a>
+        }
+      </div>
+      
+      <!-- Categoría de personas en móvil -->
+      <div class="mobile-category">
+        <div class="mobile-category-header">
+          <mat-icon>people</mat-icon>
+          <span>{{ 'common.people' | translate }}</span>
+        </div>
+        @for (item of peopleCategories; track item.path) {
           <a mat-button 
              [routerLink]="item.path" 
              routerLinkActive="active-link"

@@ -43,6 +43,20 @@ export class NavbarComponent implements OnInit {
     { label: 'common.upcoming', path: '/movies/upcoming', icon: 'event' }
   ];
   
+  // Categorías de series para el menú desplegable
+  tvCategories = [
+    { label: 'common.popularTVShows', path: '/tv/popular', icon: 'trending_up' },
+    { label: 'common.topRatedTVShows', path: '/tv/top-rated', icon: 'star' },
+    { label: 'common.onTheAirTVShows', path: '/tv/on-the-air', icon: 'live_tv' },
+    { label: 'common.airingTodayTVShows', path: '/tv/airing-today', icon: 'today' }
+  ];
+  
+  // Categorías de personas para el menú desplegable
+  peopleCategories = [
+    { label: 'common.popularPeople', path: '/people', icon: 'people' },
+    { label: 'common.searchPeople', path: '/people/search', icon: 'person_search' }
+  ];
+  
   // Categorías de exploración para el menú desplegable
   exploreCategories = [
     { label: 'common.discover', path: '/explore/discover', icon: 'explore' }

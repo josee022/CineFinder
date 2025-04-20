@@ -22,7 +22,9 @@ export type SortOption =
   'release_date.desc' | 
   'release_date.asc' | 
   'revenue.desc' | 
-  'revenue.asc';
+  'revenue.asc' |
+  'first_air_date.desc' |
+  'first_air_date.asc';
 
 export interface WatchProvider {
   provider_id: number;

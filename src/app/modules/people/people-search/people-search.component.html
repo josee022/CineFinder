@@ -1,0 +1,144 @@
+<div class="people-search-container">
+  <div class="container">
+    <div class="section-header">
+      <h1 class="section-title">Search People</h1>
+      <button mat-raised-button color="primary" [routerLink]="['/people']">
+        <mat-icon>people</mat-icon>
+        Popular People
+      </button>
+    </div>
+
+    <div class="search-form">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search for actors, directors, etc.</mat-label>
+        <input matInput [formControl]="searchControl" type="text">
+        @if (searchControl.value) {
+          <button 
+            matSuffix 
+            mat-icon-button 
+            aria-label="Clear" 
+            (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Loading indicator -->
+    @if (isLoading) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    }
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <div class="error-container">
+        <mat-icon>error</mat-icon>
+        <p>{{ errorMessage }}</p>
+        <button mat-raised-button color="primary" (click)="searchPeople()">
+          Try Again
+        </button>
+      </div>
+    }
+
+    <!-- Filtros rápidos por departamento -->
+    @if (!isLoading && !errorMessage && (featuredPeople.length > 0 || secondaryPeople.length > 0)) {
+      <div class="filters-container filters-row">
+        <div class="filters-left">
+          <button mat-stroked-button [ngClass]="{'selected-filter': filterDepartment === 'all'}" (click)="setDepartmentFilter('all')">Todos</button>
+          <button mat-stroked-button [ngClass]="{'selected-filter': filterDepartment === 'Acting'}" (click)="setDepartmentFilter('Acting')">Actores</button>
+          <button mat-stroked-button [ngClass]="{'selected-filter': filterDepartment === 'Directing'}" (click)="setDepartmentFilter('Directing')">Directores</button>
+          <button mat-stroked-button [ngClass]="{'selected-filter': filterDepartment === 'Writing'}" (click)="setDepartmentFilter('Writing')">Guionistas</button>
+          @if (showAll) {
+            <button mat-raised-button color="accent" class="relevants-toggle-btn" (click)="showOnlyRelevants()">
+              <mat-icon>star</mat-icon> Mostrar solo relevantes
+            </button>
+          }
+        </div>
+        <div class="filters-right">
+          <span class="filtering-label">
+            Filtrando por:
+            <span class="filtering-value">
+              @if (filterDepartment === 'all') { Todos }
+              @else if (filterDepartment === 'Acting') { Actores }
+              @else if (filterDepartment === 'Directing') { Directores }
+              @else if (filterDepartment === 'Writing') { Guionistas }
+              @else { {{ filterDepartment }} }
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Grid de personas (relevantes o todos, según modo) -->
+      <div class="people-grid">
+        @for (person of paginatedPeople(); track person.id) {
+          <div class="person-card" [ngClass]="{'secondary': !person.profile_path || !person.popularity || person.popularity <= 2}" (click)="navigateToPerson(person.id)">
+            <div class="person-image">
+              <img [src]="getProfileUrl(person.profile_path)" [alt]="person.name">
+            </div>
+            <div class="person-info">
+              <h3 class="person-name">{{ person.name }}</h3>
+              <p class="person-department">{{ person.known_for_department }}</p>
+              @if (getKnownFor(person)) {
+                <div class="person-known-for">
+                  <p class="known-for-title">Known For</p>
+                  <p class="known-for-movies">{{ getKnownFor(person) }}</p>
+                </div>
+              } @else {
+                <div class="person-known-for no-info">
+                  <p>Sin información destacada</p>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Resultados secundarios (sin foto o baja popularidad) -->
+      @if (!showAll && filteredAllPeople().length > filteredFeaturedPeople().length) {
+        <div class="secondary-results-info improved">
+          <mat-icon class="info-icon">info</mat-icon>
+          <span class="info-text">También encontramos otras personas menos conocidas o sin foto.</span>
+          <button mat-raised-button color="primary" class="show-all-btn" (click)="showAllResults()">
+            <mat-icon>group</mat-icon> Mostrar todos
+          </button>
+        </div>
+      }
+      @if (showAll) {
+        <div class="secondary-people-actions">
+          <button mat-stroked-button color="accent" (click)="showOnlyRelevants()">Mostrar solo relevantes</button>
+        </div>
+      }
+    }
+
+    <!-- No results message -->
+    @if (hasSearched && !isLoading && !errorMessage && people.length === 0) {
+      <div class="no-results">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+        <p>No results found. Try a different search term.</p>
+      </div>
+    }
+
+    <!-- Initial state message -->
+    @if (!hasSearched && !isLoading) {
+      <div class="initial-state">
+        <mat-icon>search</mat-icon>
+        <p>Start typing to search for people</p>
+      </div>
+    }
+
+    <!-- Pagination -->
+    @if (!isLoading && !errorMessage && totalResults > 0) {
+      <mat-paginator 
+        [length]="totalResults"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPage - 1"
+        [hidePageSize]="true"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    }
+  </div>
+</div>

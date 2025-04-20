@@ -1,0 +1,67 @@
+<div class="tv-list-container">
+  <div class="container">
+    <div class="section-header">
+      <h1 class="section-title">{{ 'common.popularTVShows' | translate }}</h1>
+    </div>
+
+    <!-- Loading indicator -->
+    @if (isLoading) {
+      <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>{{ 'common.loading' | translate }}</p>
+      </div>
+    }
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <div class="error-container">
+        <mat-icon>error</mat-icon>
+        <p>{{ errorMessage }}</p>
+        <button mat-raised-button color="primary" (click)="loadPopularTVShows()">
+          {{ 'common.tryAgain' | translate }}
+        </button>
+      </div>
+    }
+
+    <!-- TV Shows grid -->
+    @if (!isLoading && !errorMessage && tvShows.length > 0) {
+      <div class="tv-shows-grid">
+        @for (tvShow of tvShows; track tvShow.id) {
+          <div class="tv-card" [routerLink]="['/tv', tvShow.id]">
+            <div class="tv-poster">
+              <img [src]="getImageUrl(tvShow.poster_path)" [alt]="tvShow.name">
+              <div class="tv-rating">
+                <mat-icon>star</mat-icon>
+                <span>{{ tvShow.vote_average | number:'1.1-1' }}</span>
+              </div>
+            </div>
+            <div class="tv-info">
+              <h3 class="tv-title">{{ tvShow.name }}</h3>
+              <p class="tv-date">{{ formatDate(tvShow.first_air_date) }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-container">
+        <mat-paginator
+          [length]="totalResults"
+          [pageSize]="pageSize"
+          [pageIndex]="currentPage - 1"
+          [hidePageSize]="true"
+          (page)="onPageChange($event)"
+          aria-label="Seleccionar página">
+        </mat-paginator>
+      </div>
+    }
+
+    <!-- No results -->
+    @if (!isLoading && !errorMessage && tvShows.length === 0) {
+      <div class="no-results">
+        <mat-icon>search_off</mat-icon>
+        <p>{{ 'common.noResults' | translate }}</p>
+      </div>
+    }
+  </div>
+</div>

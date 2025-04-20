@@ -1,0 +1,99 @@
+<div class="category-container">
+  <div class="container">
+    <div class="category-header">
+      <h1 class="category-title">{{ categoryTitles[categoryType] }}</h1>
+      <p class="results-count" *ngIf="!isLoading && !errorMessage">
+        Mostrando {{ (currentPage - 1) * pageSize + 1 }}-{{ (currentPage - 1) * pageSize + tvShows.length }} de {{ totalResults }} series
+      </p>
+      <button mat-raised-button color="primary" class="filter-button" (click)="toggleFilters()">
+        <mat-icon>{{ showFilters ? 'filter_list_off' : 'filter_list' }}</mat-icon>
+        {{ showFilters ? ('filters.hideFilters' | translate) : ('filters.showFilters' | translate) }}
+      </button>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-wrapper" *ngIf="showFilters">
+      <app-tv-filters 
+        [initialFilters]="currentFilters" 
+        (filtersChanged)="onFiltersChanged($event)">
+      </app-tv-filters>
+    </div>
+
+    <!-- Loading indicator -->
+    @if (isLoading) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando series...</p>
+      </div>
+    }
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <div class="error-container">
+        <mat-icon>error</mat-icon>
+        <p>{{ errorMessage }}</p>
+        <button mat-raised-button color="primary" (click)="loadTVShows()">
+          Intentar de nuevo
+        </button>
+      </div>
+    }
+
+    <!-- TV Shows grid -->
+    @if (!isLoading && !errorMessage) {
+      <div class="movies-grid">
+        @for (tvShow of tvShows; track tvShow.id) {
+          <mat-card class="movie-card" (click)="navigateToTVShowDetail(tvShow.id)">
+            <div class="movie-poster-container">
+              @if (tvShow.poster_path) {
+                <img [src]="'https://image.tmdb.org/t/p/w500' + tvShow.poster_path" [alt]="tvShow.name" class="movie-poster">
+              } @else {
+                <div class="no-poster">
+                  <mat-icon>tv</mat-icon>
+                  <span>Sin póster</span>
+                </div>
+              }
+              <div class="movie-rating">
+                <span>{{ tvShow.vote_average | number:'1.1-1' }}</span>
+              </div>
+            </div>
+            <div class="movie-info">
+              <h3 class="movie-title">{{ tvShow.name }}</h3>
+              <p class="movie-year" *ngIf="tvShow.first_air_date">{{ tvShow.first_air_date | slice:0:4 }}</p>
+              <p class="movie-overview">{{ tvShow.overview ? ((tvShow.overview.length > 100) ? (tvShow.overview | slice:0:100) + '...' : tvShow.overview) : 'Sin descripción' }}</p>
+              <div class="movie-footer">
+                <button mat-flat-button color="primary" class="details-button" (click)="navigateToTVShowDetail(tvShow.id); $event.stopPropagation()">
+                  <mat-icon>info</mat-icon> Ver detalles
+                </button>
+                <div class="movie-genres" *ngIf="getTVShowGenres(tvShow.id).length > 0">
+                  <span class="genre-chip" *ngFor="let genre of getTVShowGenres(tvShow.id).slice(0, 2)">
+                    {{ genre }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        }
+        @empty {
+          <div class="no-results">
+            <mat-icon>tv_off</mat-icon>
+            <h3>No se encontraron series</h3>
+            <p>Intenta ajustar tus filtros</p>
+          </div>
+        }
+      </div>
+
+      <!-- Paginación con MatPaginator -->
+      @if (totalPages > 1) {
+        <div class="pagination-container">
+          <mat-paginator
+            [length]="totalResults"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPage - 1"
+            [hidePageSize]="true"
+            (page)="onPageChange($event)">
+          </mat-paginator>
+        </div>
+      }
+    }
+  </div>
+</div>

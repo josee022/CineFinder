@@ -1,0 +1,130 @@
+<div class="filmography-container">
+  <div class="filmography-header">
+    <div class="tabs">
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'movies'"
+        (click)="setActiveTab('movies')">
+        Movies ({{ movieCredits.length }})
+      </button>
+      <button 
+        class="tab-button" 
+        [class.active]="activeTab === 'tv'"
+        (click)="setActiveTab('tv')">
+        TV Shows ({{ tvCredits.length }})
+      </button>
+    </div>
+    
+    <div class="sort-options">
+      <span class="sort-label">Sort by:</span>
+      <button 
+        class="sort-button" 
+        [class.active]="sortBy === 'popularity'"
+        (click)="setSortBy('popularity')">
+        Popularity
+        @if (sortBy === 'popularity') {
+          <mat-icon>
+            {{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+          </mat-icon>
+        }
+      </button>
+      <button 
+        class="sort-button" 
+        [class.active]="sortBy === 'release_date'"
+        (click)="setSortBy('release_date')">
+        Release Date
+        @if (sortBy === 'release_date') {
+          <mat-icon>
+            {{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+          </mat-icon>
+        }
+      </button>
+      <button 
+        class="sort-button" 
+        [class.active]="sortBy === 'title'"
+        (click)="setSortBy('title')">
+        Title
+        @if (sortBy === 'title') {
+          <mat-icon>
+            {{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+          </mat-icon>
+        }
+      </button>
+    </div>
+  </div>
+  
+  <!-- Películas -->
+  @if (activeTab === 'movies') {
+    <div class="filmography-list">
+      @if (filteredMovies.length === 0) {
+        <div class="no-content">
+          <mat-icon>movie_off</mat-icon>
+          <p>No movie credits found</p>
+        </div>
+      } @else {
+        <!-- Grid 5x5 para películas -->
+        <div class="filmography-grid grid-5x5">
+          @for (movie of paginatedMovies; track movie.id) {
+            <div class="filmography-card" (click)="navigateToMovie(movie.id)">
+              <div class="filmography-poster">
+                <img [src]="getPosterUrl(movie.poster_path)" [alt]="movie.title">
+              </div>
+              <div class="filmography-info">
+                <div class="filmography-title">{{ movie.title }}</div>
+                <div class="filmography-year">{{ getYear(movie.release_date) }}</div>
+                <div class="filmography-character">{{ movie.character }}</div>
+                <div class="filmography-rating">
+                  <mat-icon class="star-icon">star</mat-icon>
+                  <span>{{ movie.vote_average | number:'1.1-1' }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="filmography-pagination" *ngIf="moviesTotalPages > 1">
+          <button mat-icon-button [disabled]="moviesPage === 1" (click)="goToMoviesPage(moviesPage - 1)"><mat-icon>chevron_left</mat-icon></button>
+          <span>Página {{moviesPage}} de {{moviesTotalPages}}</span>
+          <button mat-icon-button [disabled]="moviesPage === moviesTotalPages" (click)="goToMoviesPage(moviesPage + 1)"><mat-icon>chevron_right</mat-icon></button>
+        </div>
+      }
+
+    </div>
+  }
+  
+  <!-- Series de TV -->
+  @if (activeTab === 'tv') {
+    <div class="filmography-list">
+      @if (filteredTVShows.length === 0) {
+        <div class="no-content">
+          <mat-icon>tv_off</mat-icon>
+          <p>No TV credits found</p>
+        </div>
+      } @else {
+        <!-- Grid 5x5 para TV Shows -->
+        <div class="filmography-grid grid-5x5">
+          @for (tv of paginatedTV; track tv.id) {
+            <div class="filmography-card" (click)="onTVClick(tv.id)">
+              <div class="filmography-poster">
+                <img [src]="getPosterUrl(tv.poster_path)" [alt]="tv.name">
+              </div>
+              <div class="filmography-info">
+                <div class="filmography-title">{{ tv.name }}</div>
+                <div class="filmography-year">{{ getYear(tv.first_air_date) }}</div>
+                <div class="filmography-character">{{ tv.character }}</div>
+                <div class="filmography-rating">
+                  <mat-icon class="star-icon">star</mat-icon>
+                  <span>{{ tv.vote_average | number:'1.1-1' }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="filmography-pagination" *ngIf="tvTotalPages > 1">
+          <button mat-icon-button [disabled]="tvPage === 1" (click)="goToTVPage(tvPage - 1)"><mat-icon>chevron_left</mat-icon></button>
+          <span>Página {{tvPage}} de {{tvTotalPages}}</span>
+          <button mat-icon-button [disabled]="tvPage === tvTotalPages" (click)="goToTVPage(tvPage + 1)"><mat-icon>chevron_right</mat-icon></button>
+        </div>
+      }
+    </div>
+  }
+</div>
