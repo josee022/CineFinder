@@ -1,0 +1,224 @@
+<div class="tv-detail-container">
+  <!-- Loading indicator -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  }
+
+  <!-- Error message -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button color="primary" (click)="loadTVShowDetails()">
+        {{ 'common.tryAgain' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- TV Show details -->
+  @if (!isLoading && !errorMessage && tvShow) {
+    <div class="backdrop" [style.background-image]="'url(' + getBackdropUrl() + ')'">
+      <div class="backdrop-overlay">
+        <div class="container">
+          <div class="tv-header">
+            <div class="tv-poster">
+              <img [src]="getPosterUrl()" [alt]="tvShow.name">
+            </div>
+            <div class="tv-info">
+              <h1 class="tv-title">
+                {{ tvShow.name }}
+                <span class="tv-year" *ngIf="tvShow.first_air_date">({{ tvShow.first_air_date.substring(0, 4) }})</span>
+              </h1>
+
+              <div class="tv-meta">
+                @if (tvShow.first_air_date) {
+                  <span class="meta-item">{{ formatDate(tvShow.first_air_date) }}</span>
+                }
+                @if (tvShow.episode_run_time && tvShow.episode_run_time.length > 0) {
+                  <span class="meta-item">{{ formatRuntime(tvShow.episode_run_time) }}</span>
+                }
+                @if (tvShow.status) {
+                  <span class="meta-item">{{ tvShow.status }}</span>
+                }
+              </div>
+
+              <div class="tv-genres">
+                @for (genre of tvShow.genres; track genre.id) {
+                  <span class="genre-chip">{{ genre.name }}</span>
+                }
+              </div>
+
+              <div class="tv-rating">
+                <div class="rating-circle">
+                  <span class="rating-value">{{ tvShow.vote_average | number:'1.1-1' }}</span>
+                </div>
+                <div class="rating-text">
+                  <div class="rating-label">Valoración de usuarios</div>
+                  <div class="rating-count">{{ tvShow.vote_count }} votos</div>
+                </div>
+              </div>
+
+              @if (tvShow.tagline) {
+                <div class="tv-tagline">{{ tvShow.tagline }}</div>
+              }
+
+              @if (tvShow.overview) {
+                <div class="tv-overview">
+                  <h3>{{ 'movie.overview' | translate }}</h3>
+                  <p [class.expanded]="expandedOverview">{{ tvShow.overview }}</p>
+                  @if (tvShow.overview.length > 300) {
+                    <button mat-button color="primary" (click)="toggleOverview()">
+                      {{ expandedOverview ? ('common.readLess' | translate) : ('common.readMore' | translate) }}
+                    </button>
+                  }
+                </div>
+              }
+
+              <div class="tv-creators" *ngIf="tvShow.created_by && tvShow.created_by.length > 0">
+                <h3>Creadores</h3>
+                <div class="creators-list">
+                  @for (creator of tvShow.created_by; track creator.id) {
+                    <div class="creator-item" (click)="navigateToPerson(creator.id)">
+                      <div class="creator-name">{{ creator.name }}</div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="tv-content">
+        <mat-tab-group class="custom-tabs">
+          <mat-tab label="Reparto">
+            <div class="cast-container">
+              @if (cast.length > 0) {
+                <div class="cast-grid">
+                  @for (actor of cast; track actor.id) {
+                    <div class="cast-card" (click)="navigateToPerson(actor.id)">
+                      <div class="cast-image">
+                        <img [src]="getProfileUrl(actor.profile_path)" [alt]="actor.name">
+                      </div>
+                      <div class="cast-info">
+                        <div class="cast-name">{{ actor.name }}</div>
+                        @if (actor.character) {
+                          <div class="cast-character">{{ actor.character }}</div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="no-content">
+                  <mat-icon>person_off</mat-icon>
+                  <p>No hay información del reparto disponible</p>
+                </div>
+              }
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Temporadas">
+            <div class="seasons-container">
+              @if (tvShow.seasons && tvShow.seasons.length > 0) {
+                <div class="seasons-grid">
+                  @for (season of tvShow.seasons; track season.id) {
+                    <div class="season-card">
+                      <div class="season-poster">
+                        <img 
+                          [src]="season.poster_path ? 'https://image.tmdb.org/t/p/w300' + season.poster_path : 'assets/images/no-poster.png'" 
+                          [alt]="season.name">
+                      </div>
+                      <div class="season-info">
+                        <div class="season-name">{{ season.name }}</div>
+                        @if (season.air_date) {
+                          <div class="season-date">{{ formatDate(season.air_date) }}</div>
+                        }
+                        <div class="season-episodes">{{ season.episode_count }} episodios</div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="no-content">
+                  <mat-icon>tv_off</mat-icon>
+                  <p>No hay información de temporadas disponible</p>
+                </div>
+              }
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Videos">
+            <div class="videos-container">
+              @if (tvShow.videos && tvShow.videos.results && tvShow.videos.results.length > 0) {
+                <div class="videos-grid">
+                  @for (video of tvShow.videos.results; track video.id) {
+                    @if (video.site === 'YouTube') {
+                      <div class="video-card">
+                        <iframe 
+                          width="100%" 
+                          height="100%" 
+                          [src]="'https://www.youtube.com/embed/' + video.key | safeUrl" 
+                          frameborder="0" 
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                          allowfullscreen>
+                        </iframe>
+                        <div class="video-info">
+                          <div class="video-name">{{ video.name }}</div>
+                          <div class="video-type">{{ video.type }}</div>
+                        </div>
+                      </div>
+                    }
+                  }
+                </div>
+              } @else {
+                <div class="no-content">
+                  <mat-icon>videocam_off</mat-icon>
+                  <p>No hay videos disponibles para esta serie</p>
+                </div>
+              }
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Recomendaciones">
+            <div class="recommendations-container">
+              @if (tvShow.recommendations && tvShow.recommendations.results && tvShow.recommendations.results.length > 0) {
+                <div class="recommendations-grid">
+                  @for (rec of tvShow.recommendations.results; track rec.id) {
+                    <div class="recommendation-card" [routerLink]="['/tv', rec.id]">
+                      <div class="recommendation-poster">
+                        <img 
+                          [src]="rec.poster_path ? 'https://image.tmdb.org/t/p/w300' + rec.poster_path : 'assets/images/no-poster.png'" 
+                          [alt]="rec.name">
+                        <div class="recommendation-rating">
+                          <mat-icon>star</mat-icon>
+                          <span>{{ rec.vote_average | number:'1.1-1' }}</span>
+                        </div>
+                      </div>
+                      <div class="recommendation-info">
+                        <div class="recommendation-title">{{ rec.name }}</div>
+                        @if (rec.first_air_date) {
+                          <div class="recommendation-date">{{ formatDate(rec.first_air_date) }}</div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="no-content">
+                  <mat-icon>tv_off</mat-icon>
+                  <p>No hay recomendaciones disponibles para esta serie</p>
+                </div>
+              }
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  }
+</div>

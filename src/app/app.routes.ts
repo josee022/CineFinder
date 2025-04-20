@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { PeopleModule } from './modules/people/people.module';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,45 @@ export const routes: Routes = [
     title: 'CineFinder - Resultados de Búsqueda'
   },
   {
+    path: 'tv',
+    children: [
+      {
+        path: '',
+        redirectTo: 'popular',
+        pathMatch: 'full'
+      },
+      {
+        path: 'popular',
+        loadComponent: () => import('./modules/tv/tv-category/tv-category.component').then(m => m.TVCategoryComponent),
+        data: { categoryType: 'popular' },
+        title: 'CineFinder - Series Populares'
+      },
+      {
+        path: 'top-rated',
+        loadComponent: () => import('./modules/tv/tv-category/tv-category.component').then(m => m.TVCategoryComponent),
+        data: { categoryType: 'top-rated' },
+        title: 'CineFinder - Series Mejor Valoradas'
+      },
+      {
+        path: 'on-the-air',
+        loadComponent: () => import('./modules/tv/tv-category/tv-category.component').then(m => m.TVCategoryComponent),
+        data: { categoryType: 'on-the-air' },
+        title: 'CineFinder - Series en Emisión'
+      },
+      {
+        path: 'airing-today',
+        loadComponent: () => import('./modules/tv/tv-category/tv-category.component').then(m => m.TVCategoryComponent),
+        data: { categoryType: 'airing-today' },
+        title: 'CineFinder - Series Hoy'
+      },
+      {
+        path: ':id',
+        loadComponent: () => import('./modules/tv/tv-detail/tv-detail.component').then(m => m.TVDetailComponent),
+        title: 'CineFinder - Detalle de Serie'
+      }
+    ]
+  },
+  {
     path: 'explore',
     children: [
       {
@@ -68,6 +108,11 @@ export const routes: Routes = [
     path: 'explore/:category',
     loadComponent: () => import('./modules/movies/movie-category/movie-category.component').then(m => m.MovieCategoryComponent),
     title: 'CineFinder - Explorar Películas'
+  },
+  {
+    path: 'people',
+    loadChildren: () => import('./modules/people/people.module').then(m => m.PeopleModule),
+    title: 'CineFinder - Actores y Personas'
   },
   {
     path: '**',

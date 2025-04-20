@@ -1,0 +1,255 @@
+.person-images-container {
+  margin-top: 1rem;
+}
+
+.images-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.image-item {
+  background: #181818;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.15s, box-shadow 0.15s;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border-color: rgba(var(--primary-color-rgb), 0.5);
+    
+    .image-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.image-wrapper {
+  position: relative;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  mat-icon {
+    color: white;
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+  }
+}
+
+.image-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: rgba(30, 30, 30, 0.7);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image-rating {
+  display: flex;
+  align-items: center;
+  
+  .star-icon {
+    color: #f5c518;
+    font-size: 1rem;
+    height: 1rem;
+    width: 1rem;
+    margin-right: 0.25rem;
+  }
+}
+
+.no-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: 8px;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  mat-icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+    text-align: center;
+    margin: 0;
+  }
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.lightbox-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  z-index: 1001;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1002;
+  
+  mat-icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+  }
+}
+
+.lightbox-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .lightbox-image {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.lightbox-controls {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  
+  .lightbox-nav {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+    &:hover {
+      background-color: rgba(var(--primary-color-rgb), 0.5);
+    }
+    
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    &.prev {
+      margin-left: -50px;
+    }
+    
+    &.next {
+      margin-right: -50px;
+    }
+    
+    mat-icon {
+      font-size: 1.5rem;
+      height: 1.5rem;
+      width: 1.5rem;
+    }
+  }
+}
+
+.lightbox-info {
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 0.9rem;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .images-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .lightbox-controls {
+    .lightbox-nav {
+      &.prev {
+        margin-left: -20px;
+      }
+      
+      &.next {
+        margin-right: -20px;
+      }
+    }
+  }
+}

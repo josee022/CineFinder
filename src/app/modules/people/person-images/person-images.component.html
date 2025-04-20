@@ -1,0 +1,67 @@
+<div class="person-images-container">
+  <!-- No hay imágenes -->
+  @if (images.length === 0) {
+    <div class="no-content">
+      <mat-icon>image_not_supported</mat-icon>
+      <p>No images available</p>
+    </div>
+  } @else {
+    <!-- Grid de imágenes paginadas -->
+    <div class="images-grid">
+      @for (image of paginatedImages; track image.file_path) {
+        <div class="image-item" (click)="openLightbox(image)">
+          <div class="image-wrapper">
+            <img [src]="getImageUrl(image)" [alt]="personName" loading="lazy">
+            <div class="image-overlay">
+              <mat-icon>zoom_in</mat-icon>
+            </div>
+          </div>
+          <div class="image-info">
+            <div class="image-resolution">{{ image.width }}x{{ image.height }}</div>
+            @if (image.vote_count > 0) {
+              <div class="image-rating">
+                <mat-icon class="star-icon">star</mat-icon>
+                <span>{{ image.vote_average | number:'1.1-1' }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+    <div class="images-pagination" *ngIf="totalPages > 1">
+      <button mat-icon-button [disabled]="page === 1" (click)="goToPage(page - 1)"><mat-icon>chevron_left</mat-icon></button>
+      <span>Página {{page}} de {{totalPages}}</span>
+      <button mat-icon-button [disabled]="page === totalPages" (click)="goToPage(page + 1)"><mat-icon>chevron_right</mat-icon></button>
+    </div>
+  }
+  
+  <!-- Lightbox -->
+  @if (lightboxOpen) {
+    <div class="lightbox" (keydown)="handleKeydown($event)" tabindex="0">
+      <div class="lightbox-overlay" (click)="closeLightbox()"></div>
+      <div class="lightbox-content">
+        <button class="lightbox-close" (click)="closeLightbox()">
+          <mat-icon>close</mat-icon>
+        </button>
+        
+        <div class="lightbox-image-container">
+          <img [src]="getImageUrl(selectedImage!, 'original')" [alt]="personName" class="lightbox-image">
+        </div>
+        
+        <div class="lightbox-controls">
+          <button class="lightbox-nav prev" (click)="prevImage()" [disabled]="images.indexOf(selectedImage!) === 0">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button class="lightbox-nav next" (click)="nextImage()" [disabled]="images.indexOf(selectedImage!) === images.length - 1">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+        
+        <div class="lightbox-info">
+          <div class="image-count">{{ images.indexOf(selectedImage!) + 1 }} / {{ images.length }}</div>
+          <div class="image-resolution">{{ selectedImage?.width }}x{{ selectedImage?.height }}</div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

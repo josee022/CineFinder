@@ -1,0 +1,407 @@
+.tv-detail-container {
+  min-height: calc(100vh - 64px);
+}
+
+.loading-container, .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: 2rem;
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  p {
+    margin: 1rem 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+  }
+  
+  mat-icon {
+    font-size: 3rem;
+    height: 3rem;
+    width: 3rem;
+    color: var(--error-color);
+    margin-bottom: 1rem;
+  }
+}
+
+.backdrop {
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  
+  .backdrop-overlay {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.9) 100%);
+    padding: 3rem 0;
+  }
+}
+
+.tv-header {
+  display: flex;
+  gap: 2rem;
+  
+  .tv-poster {
+    flex: 0 0 300px;
+    
+    img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+  }
+  
+  .tv-info {
+    flex: 1;
+    color: white;
+    
+    .tv-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      
+      .tv-year {
+        font-weight: 400;
+        opacity: 0.7;
+        margin-left: 0.5rem;
+      }
+    }
+    
+    .tv-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      
+      .meta-item {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+        
+        &:not(:last-child)::after {
+          content: "•";
+          margin-left: 1rem;
+          opacity: 0.5;
+        }
+      }
+    }
+    
+    .tv-genres {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      
+      .genre-chip {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.9rem;
+        color: white;
+      }
+    }
+    
+    .tv-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      
+      .rating-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        
+        .rating-value {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: white;
+        }
+      }
+      
+      .rating-text {
+        .rating-label {
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .rating-count {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.5);
+        }
+      }
+    }
+    
+    .tv-tagline {
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .tv-overview {
+      margin-bottom: 1.5rem;
+      
+      h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem;
+      }
+      
+      p {
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+        margin: 0;
+        max-height: 100px;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        
+        &.expanded {
+          max-height: 1000px;
+        }
+      }
+    }
+    
+    .tv-creators {
+      h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem;
+      }
+      
+      .creators-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        
+        .creator-item {
+          cursor: pointer;
+          
+          .creator-name {
+            color: var(--primary-color);
+            font-weight: 500;
+            
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.tv-content {
+  padding: 2rem 0;
+  
+  ::ng-deep .custom-tabs {
+    .mat-mdc-tab-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  
+    .mat-mdc-tab {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+  
+    .mdc-tab__text-label {
+      color: white !important;
+      font-weight: 600 !important;
+      font-size: 1.1rem;
+    }
+  
+    .mat-mdc-tab:not(.mat-mdc-tab-disabled).mdc-tab--active .mdc-tab__text-label {
+      color: white !important;
+      font-weight: 700 !important;
+    }
+  
+    .mat-mdc-tab-body-content {
+      padding: 24px 0;
+    }
+  }
+}
+
+// Estilos para el reparto
+.cast-container, .seasons-container, .videos-container, .recommendations-container {
+  padding: 1rem 0;
+}
+
+.cast-grid, .seasons-grid, .recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.cast-card, .season-card, .recommendation-card {
+  background-color: rgba(30, 30, 30, 0.7);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    border-color: rgba(var(--primary-color-rgb), 0.5);
+  }
+}
+
+.cast-image, .season-poster, .recommendation-poster {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 2/3;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .recommendation-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border-radius: 5px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    
+    mat-icon {
+      color: #f5c518;
+      font-size: 1rem;
+      height: 1rem;
+      width: 1rem;
+      margin-right: 0.25rem;
+    }
+  }
+}
+
+.cast-info, .season-info, .recommendation-info, .video-info {
+  padding: 0.75rem;
+  
+  .cast-name, .season-name, .recommendation-title, .video-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .cast-character, .season-date, .season-episodes, .recommendation-date, .video-type {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.video-card {
+  background-color: rgba(30, 30, 30, 0.7);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  iframe {
+    aspect-ratio: 16/9;
+    border: none;
+  }
+}
+
+.no-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  mat-icon {
+    font-size: 3rem;
+    height: 3rem;
+    width: 3rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .tv-header {
+    flex-direction: column;
+    
+    .tv-poster {
+      flex: 0 0 auto;
+      max-width: 300px;
+      margin: 0 auto 2rem;
+    }
+  }
+  
+  .cast-grid, .seasons-grid, .recommendations-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .videos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 576px) {
+  .tv-header .tv-info .tv-title {
+    font-size: 1.8rem;
+  }
+  
+  .cast-grid, .seasons-grid, .recommendations-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .videos-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cast-info, .season-info, .recommendation-info {
+    padding: 0.5rem;
+  }
+}

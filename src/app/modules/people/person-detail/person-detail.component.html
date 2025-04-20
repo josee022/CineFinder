@@ -1,0 +1,171 @@
+<div class="person-detail-container">
+  <div class="container">
+    <!-- Loading indicator -->
+    @if (isLoading) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+      </div>
+    }
+
+    <!-- Error message -->
+    @if (errorMessage) {
+      <div class="error-container">
+        <mat-icon>error</mat-icon>
+        <p>{{ errorMessage }}</p>
+        <button mat-raised-button color="primary" (click)="loadPersonDetails()">
+          Intentar de nuevo
+        </button>
+      </div>
+    }
+
+    <!-- Person details -->
+    @if (!isLoading && !errorMessage && person) {
+      <div class="person-details">
+        <div class="person-header">
+          <div class="person-image">
+            <img [src]="getProfileUrl()" [alt]="person.name">
+          </div>
+          <div class="person-info">
+            <div class="person-info-main">
+              <h1 class="person-name">{{ person.name }}</h1>
+
+              @if (person.birthday || person.place_of_birth) {
+                <div class="person-meta">
+                  @if (person.birthday) {
+                    <div class="meta-item">
+                      <mat-icon>cake</mat-icon>
+                      <span>{{ formatDate(person.birthday) }} ({{ calculateAge(person.birthday, person.deathday) }})</span>
+                      @if (person.deathday) {
+                        <span> - {{ formatDate(person.deathday) }}</span>
+                      }
+                    </div>
+                  }
+
+                  @if (person.place_of_birth) {
+                    <div class="meta-item">
+                      <mat-icon>location_on</mat-icon>
+                      <span>{{ person.place_of_birth }}</span>
+                    </div>
+                  }
+
+                  @if (person.known_for_department) {
+                    <div class="meta-item">
+                      <mat-icon>work</mat-icon>
+                      <span>{{ person.known_for_department }}</span>
+                    </div>
+                  }
+                </div>
+              }
+
+              @if (socialLinks.length > 0) {
+                <div class="person-external-ids">
+                  @for (link of socialLinks; track link.name) {
+                    <a [href]="link.url" target="_blank" [matTooltip]="link.name">
+                      <mat-icon>{{ link.icon }}</mat-icon>
+                    </a>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if (person.biography) {
+          <div class="person-biography">
+            <h3>Biografía</h3>
+            <p>{{ person.biography }}</p>
+          </div>
+        }
+      </div>
+
+      <mat-tab-group class="custom-tabs">
+        <mat-tab label="Películas">
+          <div class="filmography-container">
+            <div class="filmography-grid grid-5x5">
+              @for (credit of movieCredits; track credit.id) {
+                <div class="filmography-card" (click)="navigateToMovie(credit.id)">
+                  <div class="filmography-poster">
+                    <img [src]="'https://image.tmdb.org/t/p/w300' + credit.poster_path" [alt]="credit.title"
+                         onerror="this.src='assets/images/no-poster.png'">
+                  </div>
+                  <div class="filmography-info">
+                    <div class="filmography-title">{{ credit.title }}</div>
+                    @if (credit.release_date) {
+                      <div class="filmography-year">{{ formatDate(credit.release_date) }}</div>
+                    }
+                    @if (credit.character) {
+                      <div class="filmography-character">{{ credit.character }}</div>
+                    }
+                    <div class="filmography-rating">
+                      <mat-icon class="star-icon">star</mat-icon>
+                      <span>{{ credit.vote_average | number:'1.1-1' }}</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+            @if (movieCredits.length === 0) {
+              <div class="no-content">
+                <mat-icon>movie_off</mat-icon>
+                <p>No hay películas disponibles</p>
+              </div>
+            }
+          </div>
+        </mat-tab>
+        
+        <mat-tab label="Series de TV">
+          <div class="filmography-container">
+            <div class="filmography-grid grid-5x5">
+              @for (credit of tvCredits; track credit.id) {
+                <div class="filmography-card" (click)="router.navigate(['/tv', credit.id])">
+                  <div class="filmography-poster">
+                    <img [src]="'https://image.tmdb.org/t/p/w300' + credit.poster_path" [alt]="credit.name"
+                         onerror="this.src='assets/images/no-poster.png'">
+                  </div>
+                  <div class="filmography-info">
+                    <div class="filmography-title">{{ credit.name }}</div>
+                    @if (credit.first_air_date) {
+                      <div class="filmography-year">{{ formatDate(credit.first_air_date) }}</div>
+                    }
+                    @if (credit.character) {
+                      <div class="filmography-character">{{ credit.character }}</div>
+                    }
+                    <div class="filmography-rating">
+                      <mat-icon class="star-icon">star</mat-icon>
+                      <span>{{ credit.vote_average | number:'1.1-1' }}</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+            @if (tvCredits.length === 0) {
+              <div class="no-content">
+                <mat-icon>tv_off</mat-icon>
+                <p>No hay series de TV disponibles</p>
+              </div>
+            }
+          </div>
+        </mat-tab>
+        <mat-tab label="Imágenes">
+          <div class="images-container">
+            @if (profileImages && profileImages.length > 0) {
+              <div class="images-grid">
+                @for (image of profileImages; track image.file_path) {
+                  <div class="image-item">
+                    <img [src]="'https://image.tmdb.org/t/p/w300' + image.file_path" [alt]="person.name">
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="no-images">
+                <mat-icon>image_not_supported</mat-icon>
+                <p>No hay imágenes disponibles</p>
+              </div>
+            }
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    }
+  </div>
+</div>

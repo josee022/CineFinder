@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { MovieResponse, MovieDetails, ImageResponse, KeywordResponse, ReviewResponse, Genre } from './models/movie.model';
+import { PersonResponse, PersonDetails } from './models/person.model';
+import { TVShow, TVShowResponse, TVShowDetails } from './models/tv.model';
 import { 
   MovieFilters, 
   WatchProviderResponse, 
@@ -168,7 +170,7 @@ export class ApiService {
     return this.http.get<MovieResponse>(`${this.baseUrl}/discover/movie`, { params });
   }
 
-  getWatchProviders(movieId: number): Observable<WatchProviderResponse> {
+  getMovieWatchProviders(movieId: number): Observable<WatchProviderResponse> {
     return this.http.get<WatchProviderResponse>(
       `${this.baseUrl}/movie/${movieId}/watch/providers?api_key=${this.apiKey}`
     );
@@ -177,6 +179,25 @@ export class ApiService {
   getWatchProvidersList(): Observable<WatchProvidersListResponse> {
     return this.http.get<WatchProvidersListResponse>(
       `${this.baseUrl}/watch/providers/movie?api_key=${this.apiKey}&language=${this.language}&watch_region=${this.region}`
+    );
+  }
+
+  // Métodos para actores/personas
+  getPopularPeople(page: number = 1): Observable<PersonResponse> {
+    return this.http.get<PersonResponse>(
+      `${this.baseUrl}/person/popular?api_key=${this.apiKey}&language=${this.language}&page=${page}`
+    );
+  }
+
+  searchPeople(query: string, page: number = 1): Observable<PersonResponse> {
+    return this.http.get<PersonResponse>(
+      `${this.baseUrl}/search/person?api_key=${this.apiKey}&language=${this.language}&query=${query}&page=${page}&include_adult=false`
+    );
+  }
+
+  getPersonDetails(personId: number): Observable<PersonDetails> {
+    return this.http.get<PersonDetails>(
+      `${this.baseUrl}/person/${personId}?api_key=${this.apiKey}&language=${this.language}&append_to_response=movie_credits,tv_credits,combined_credits,images,external_ids`
     );
   }
 
@@ -249,5 +270,141 @@ export class ApiService {
 
   getCurrentLanguage(): string {
     return this.language;
+  }
+
+  // Métodos para series de TV
+  getTVShowDetail(id: number): Observable<TVShowDetails> {
+    return this.http.get<TVShowDetails>(
+      `${this.baseUrl}/tv/${id}?api_key=${this.apiKey}&language=${this.language}&append_to_response=credits,videos,similar,recommendations,images,keywords,watch/providers`
+    );
+  }
+
+  searchTVShows(query: string, page: number = 1): Observable<TVShowResponse> {
+    return this.http.get<TVShowResponse>(
+      `${this.baseUrl}/search/tv?api_key=${this.apiKey}&language=${this.language}&query=${query}&page=${page}&include_adult=false&region=${this.region}`
+    );
+  }
+
+  getPopularTVShows(page: number = 1): Observable<TVShowResponse> {
+    return this.http.get<TVShowResponse>(
+      `${this.baseUrl}/tv/popular?api_key=${this.apiKey}&language=${this.language}&page=${page}`
+    );
+  }
+
+  getTopRatedTVShows(page: number = 1): Observable<TVShowResponse> {
+    return this.http.get<TVShowResponse>(
+      `${this.baseUrl}/tv/top_rated?api_key=${this.apiKey}&language=${this.language}&page=${page}`
+    );
+  }
+
+  getOnTheAirTVShows(page: number = 1): Observable<TVShowResponse> {
+    return this.http.get<TVShowResponse>(
+      `${this.baseUrl}/tv/on_the_air?api_key=${this.apiKey}&language=${this.language}&page=${page}`
+    );
+  }
+
+  getAiringTodayTVShows(page: number = 1): Observable<TVShowResponse> {
+    return this.http.get<TVShowResponse>(
+      `${this.baseUrl}/tv/airing_today?api_key=${this.apiKey}&language=${this.language}&page=${page}`
+    );
+  }
+
+  getTVShowRecommendations(tvId: number, page: number = 1): Observable<TVShowResponse> {
+    return this.http.get<TVShowResponse>(
+      `${this.baseUrl}/tv/${tvId}/recommendations?api_key=${this.apiKey}&language=${this.language}&page=${page}`
+    );
+  }
+
+  getTVShowSimilar(tvId: number, page: number = 1): Observable<TVShowResponse> {
+    return this.http.get<TVShowResponse>(
+      `${this.baseUrl}/tv/${tvId}/similar?api_key=${this.apiKey}&language=${this.language}&page=${page}`
+    );
+  }
+
+  getTVShowsByGenre(genreId: number, page: number = 1): Observable<TVShowResponse> {
+    return this.http.get<TVShowResponse>(
+      `${this.baseUrl}/discover/tv?api_key=${this.apiKey}&language=${this.language}&with_genres=${genreId}&page=${page}`
+    );
+  }
+
+  getTVGenres(): Observable<Genre[]> {
+    return this.http.get<{genres: Genre[]}>(`${this.baseUrl}/genre/tv/list?api_key=${this.apiKey}&language=${this.language}`)
+      .pipe(
+        map((response: {genres: Genre[]}) => response.genres)
+      );
+  }
+
+  getTVShowWatchProviders(tvId: number): Observable<WatchProviderResponse> {
+    return this.http.get<WatchProviderResponse>(
+      `${this.baseUrl}/tv/${tvId}/watch/providers?api_key=${this.apiKey}`
+    );
+  }
+
+  getTVWatchProvidersList(): Observable<WatchProvidersListResponse> {
+    return this.http.get<WatchProvidersListResponse>(
+      `${this.baseUrl}/watch/providers/tv?api_key=${this.apiKey}&language=${this.language}&watch_region=${this.region}`
+    );
+  }
+
+  discoverTVShows(filters: MovieFilters, page: number = 1): Observable<TVShowResponse> {
+    let params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('language', this.language)
+      .set('page', page.toString());
+    
+    // Añadir filtros a los parámetros
+    if (filters.year) {
+      params = params.set('first_air_date_year', filters.year.toString());
+    }
+    
+    if (filters.genres && filters.genres.length > 0) {
+      params = params.set('with_genres', filters.genres.join(','));
+    }
+    
+    if (filters.sortBy) {
+      // Adaptar los sort_by de películas a series si es necesario
+      let sortBy = filters.sortBy;
+      if (sortBy === 'release_date.desc') sortBy = 'first_air_date.desc';
+      if (sortBy === 'release_date.asc') sortBy = 'first_air_date.asc';
+      params = params.set('sort_by', sortBy);
+    }
+    
+    if (filters.includeAdult !== undefined) {
+      params = params.set('include_adult', filters.includeAdult.toString());
+    }
+    
+    if (filters.withCast) {
+      params = params.set('with_cast', filters.withCast);
+    }
+    
+    if (filters.withCrew) {
+      params = params.set('with_crew', filters.withCrew);
+    }
+    
+    if (filters.voteAverageGte) {
+      params = params.set('vote_average.gte', filters.voteAverageGte.toString());
+    }
+    
+    if (filters.releaseDateGte) {
+      params = params.set('first_air_date.gte', filters.releaseDateGte);
+    }
+    
+    if (filters.releaseDateLte) {
+      params = params.set('first_air_date.lte', filters.releaseDateLte);
+    }
+    
+    if (filters.withWatchProviders && filters.withWatchProviders.length > 0) {
+      params = params.set('with_watch_providers', filters.withWatchProviders.join('|'));
+      
+      if (filters.watchRegion) {
+        params = params.set('watch_region', filters.watchRegion);
+      }
+    }
+    
+    if (filters.with_keywords && filters.with_keywords.length > 0) {
+      params = params.set('with_keywords', filters.with_keywords.join(','));
+    }
+    
+    return this.http.get<TVShowResponse>(`${this.baseUrl}/discover/tv`, { params });
   }
 }
