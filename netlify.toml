@@ -1,6 +1,6 @@
 [build]
   command = "npm install --legacy-peer-deps && ng build"
-  publish = "dist/cinefinder"
+  publish = "dist/cinefinder/browser"
 
 [[redirects]]
   from = "/*"
